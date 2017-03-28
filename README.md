@@ -18,8 +18,7 @@ Currently includes:
 ---
 ## Install
 
-### Minetest Bower
-##### (recommended)
+### Minetest Bower *(recommended)*
 
 **Mob Engine** is on **[Minetest Bower](https://minetest-bower.herokuapp.com)** *(a mod repository and package manager for Minetest)*
 
