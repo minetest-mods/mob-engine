@@ -3,7 +3,10 @@
     "description": "Mob Engine is a mod(pack) for Minetest game that provides a mob engine and adds several mobs to the game.",
     "homepage": "https://github.com/minetest-mods/mob-engine",
     "authors": [
-        "BlockMen - author <blockmen2015@gmail.com>"
+        "BlockMen - author",
+        "BrunoMine - maintainer",
+        "Diogo Gomes - maintainer",
+        "LNJ - maintainer"
     ],
     "license": "Zlib",
     "keywords": [
