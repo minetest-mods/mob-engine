@@ -5,7 +5,7 @@ This project adhere to [Semantic Versioning](http://semver.org/).
 
 
 ---
-## [2.3.2][2.3.2]
+## [2.3.2][2.3.2] - 2017-04-10
 ### Changed
 - Update general information
 
