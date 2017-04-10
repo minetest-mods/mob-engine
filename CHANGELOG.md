@@ -5,30 +5,13 @@ This project adhere to [Semantic Versioning](http://semver.org/).
 
 
 ---
-## [Unreleased][unreleased]
-### Added
--  
--  
-
+## [2.3.2][2.3.2]
 ### Changed
--  
--  
-
-### Deprecated
--  
--  
-
-### Removed
--  
--  
+- Update general information
 
 ### Fixed
--  
--  
+- Fix Minetest Bower integration
 
-### Security
--  
--  
 
 ---
 ## [2.3.1][2.3.1] - 2016-02-16
@@ -182,7 +165,7 @@ This project adhere to [Semantic Versioning](http://semver.org/).
 
 
 ---
-[Unreleased]: https://github.com/minetest-mods/mob-engine/compare/2.3.1...develop
+[2.3.2]: https://github.com/minetest-mods/mob-engine/compare/2.3.1...2.3.2
 [2.3.1]: https://github.com/minetest-mods/mob-engine/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/minetest-mods/mob-engine/compare/2.2.2...2.3.0
 [2.2.2]: https://github.com/minetest-mods/mob-engine/compare/2.2.0...2.2.2

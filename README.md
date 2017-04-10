@@ -12,7 +12,7 @@ Currently includes:
 
 **Mob Engine** was started as a fork of [BlockMen](https://github.com/BlockMen)'s [Creature MOB-Engine](https://github.com/BlockMen/cme) (when the developer abandoned the project) with the purpose of maintain.
 
-**Version:** Unreleased ([change log](CHANGELOG.md))
+**Version:** 2.3.2 ([change log](CHANGELOG.md))
 
 
 ---
