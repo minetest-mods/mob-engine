@@ -93,7 +93,7 @@ function creatures.findTarget(search_obj, pos, radius, search_type, ignore_mob, 
           if is_player then
             table.insert(mobs, obj)
           end
-        elseif search_type == "mate" then
+        elseif search_type == "mates" then
           if not isItem and (entity and entity.mob_name == ignore_mob) then
             table.insert(mobs, obj)
           end
