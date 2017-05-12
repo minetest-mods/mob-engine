@@ -22,7 +22,7 @@ creatures.findTarget(search_obj, pos, radius, search_type, mob_name, xray, no_co
       ^ ignores "mob_type" if specified
     ^ "nonhostile" -- returns every object that is not hostile or player
     ^ "player" -- returns all players
-    ^ "mates" -- returns all objects(creatures) that are of same kind
+    ^ "mate" -- returns all objects(creatures) that are of same kind
       ^ requires "mob_type" specifies
   ^ mob_type specifies creature that is ignored or searched, depending on search_type
   ^ xray allows searching through blocks/nodes (default == false)
