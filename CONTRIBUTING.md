@@ -85,7 +85,7 @@ Both issue lists are sorted by total number of comments. While not perfect, numb
 Mob Engine adopts [Vincent Driessen's branching model](http://nvie.com/posts/a-successful-git-branching-model):
 
 | Branch name | Type | branch off from | merge into | Description |
-| --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | master | main branch | n/a | n/a | Branch where the source code of `HEAD` always reflects a production-ready state. |
 | develop | main branch | n/a | n/a | Branch where the source code of `HEAD` always reflects a state with the latest delivered development changes for the next release. This is where any automatic nightly builds are built from.
 | feature/... | supporting branch | `develop` | `develop` | Branches that exists as long as the new feature is in development, but will eventually be merged into develop (to definitely add the new feature to the upcoming release) or discarded (in case of a disappointing experiment).
