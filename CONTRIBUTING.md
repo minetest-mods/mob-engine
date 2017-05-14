@@ -95,7 +95,7 @@ Mob Engine adopts [Vincent Driessen's branching model](http://nvie.com/posts/a-s
 For more information on the Vincent Driessen's branching model, see [A successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model).
 
 #### Start contributing
-To start contibuting you must follow this steps:
+To start contibuting you must follow these steps:
 
 1. Fork the repository
 2. Choose the desired branch (except `master` or `develop`) or create a new branch (from `develop` with `feature` prefix or from master with `hotfix` prefix).
