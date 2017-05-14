@@ -183,6 +183,7 @@ Please open an issue if you have suggestions for new labels, and if you notice s
 [search-label-more-information-needed]: https://github.com/minetest-mods/mob-engine/issues?&q=label%3Amore-information-needed
 [search-label-needs-reproduction]: https://github.com/minetest-mods/mob-engine/issues?&q=label%3Aneeds-reproduction
 [search-label-needs-review]: https://github.com/minetest-mods/mob-engine/issues?&q=label%3Aneeds-review
+[search-label-needs-testing]: https://github.com/minetest-mods/mob-engine/issues?&q=label%3Aneeds-testing
 [search-label-question]: https://github.com/minetest-mods/mob-engine/issues?&q=label%3Aquestion
 [search-label-quicker]: https://github.com/minetest-mods/mob-engine/issues?&q=label%3Aquicker
 [search-label-requires-changes]: https://github.com/minetest-mods/mob-engine/issues?&q=label%3Arequires-changes
