@@ -11,7 +11,7 @@ creatures.rnd(chance_table)
 creatures.compare_pos(pos1, pos2)
  -returns true if pos1 == pos2
 
-creatures.findTarget(search_obj, pos, radius, search_type, mob_name, xray, no_count)
+creatures.find_target(search_obj, pos, radius, search_type, mob_name, xray, no_count)
  -returns table of found objects (as ObjectRef) and boolean player_near
   ^ search_obj is searching object; can be nil
   ^ pos is starting position for search radius
@@ -29,7 +29,7 @@ creatures.findTarget(search_obj, pos, radius, search_type, mob_name, xray, no_co
   ^ no_count skips collecting loop and returns just the boolean player_near
     ^ table is empty
 
-creatures.dropItems(pos, drops)
+creatures.drop_items(pos, drops)
  -drops items at position pos
   ^ pos where to drop Items
   ^ drops table in #ItemDrops format
