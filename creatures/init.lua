@@ -24,10 +24,26 @@ creatures = {}
 
 local modpath = core.get_modpath("creatures")
 
--- API and common functions
+
+-- API features
+
+-- Basic Methods
 dofile(modpath .."/common.lua")
-dofile(modpath .."/functions.lua")
-dofile(modpath .."/register.lua")
+dofile(modpath .."/drop_items.lua")
+dofile(modpath .."/find_target.lua")
+dofile(modpath .."/kill_mob.lua")
+dofile(modpath .."/knockback.lua")
+dofile(modpath .."/change_hp.lua")
+-- Mod Functions
+dofile(modpath .."/get_staticdata.lua")
+dofile(modpath .."/on_rightclick.lua")
+dofile(modpath .."/on_punch.lua")
+dofile(modpath .."/on_step.lua")
+-- Register Methods
+dofile(modpath .."/register_mob.lua")
+dofile(modpath .."/register_spawn.lua")
+dofile(modpath .."/register_spawner.lua")
+dofile(modpath .."/register_spawner_egg.lua")
 
 -- Common items
 dofile(modpath .."/items.lua")
