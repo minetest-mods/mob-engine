@@ -480,7 +480,7 @@ creatures.on_step = function(self, dtime)
     local sn = core.get_node_or_nil(p)
     local eat_node
     for _,name in pairs(nodes) do
-      if name == self.last_node.name then
+      if self.last_node ~= nil and name == self.last_node.name then
         eat_node = current_pos
         break
       elseif sn and sn.name == name then
