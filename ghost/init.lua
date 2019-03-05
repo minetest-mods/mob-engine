@@ -22,7 +22,6 @@
 
 local def = {
   -- general
-  name = "creatures:ghost",
   stats = {
     hp = 12,
     lifetime = 300, -- 5 Minutes
@@ -39,7 +38,7 @@ local def = {
     fly = {chance = 0.25, duration = 2.5, moving_speed = 2, max_height = 25, target_offset = 2.1},
     fly_2 = {chance = 0.1, duration = 4, moving_speed = 1.6, update_yaw = 3, max_height = 25, target_offset = 2.5},
     -- special modes
-    attack = {chance = 0, moving_speed = 2.6},
+    attack = {chance = 0, moving_speed = 2.6, duration = 20},
   },
 
   model = {
@@ -107,4 +106,4 @@ local def = {
 
 }
 
-creatures.register_mob(def)
+creatures.register_mob("creatures:ghost", def)

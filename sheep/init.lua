@@ -63,7 +63,6 @@ end
 local colors = {"white", "grey", "brown", "black"}
 
 local def = {
-	name = "creatures:sheep",
 	stats = {
 		hp = 8,
 		lifetime = 450, -- 7,5 Minutes
@@ -212,4 +211,4 @@ local def = {
 	end
 }
 
-creatures.register_mob(def)
+creatures.register_mob("creatures:sheep", def)

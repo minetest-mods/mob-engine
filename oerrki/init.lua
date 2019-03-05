@@ -21,7 +21,6 @@
 
 
 local def = {
-  name = "creatures:oerrki",
   stats = {
     hp = 13,
     lifetime = 540, -- 9 Minutes
@@ -107,4 +106,4 @@ local def = {
   },
 }
 
-creatures.register_mob(def)
+creatures.register_mob("creatures:oerrki", def)

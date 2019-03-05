@@ -57,7 +57,6 @@ core.register_craftitem(":creatures:feather", {
 
 local def = {
   -- general
-  name = "creatures:chicken",
   stats = {
     hp = 5,
     lifetime = 300, -- 5 Minutes
@@ -82,7 +81,7 @@ local def = {
     mesh = "creatures_chicken.b3d",
     textures = {"creatures_chicken.png"},
     collisionbox = {-0.25, -0.01, -0.3, 0.25, 0.45, 0.3},
-    rotation = 90.0,
+    rotation = 180.0,
     collide_with_objects = false,
     animations = {
       idle = {start = 0, stop = 1, speed = 10},
@@ -134,4 +133,4 @@ local def = {
   end
 }
 
-creatures.register_mob(def)
+creatures.register_mob("creatures:chicken", def)

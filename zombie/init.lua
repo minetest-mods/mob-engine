@@ -28,7 +28,6 @@ core.register_craftitem(":creatures:rotten_flesh", {
 
 local def = {
   -- general
-  name = "creatures:zombie",
   stats = {
     hp = 20,
     lifetime = 300, -- 5 Minutes
@@ -45,7 +44,7 @@ local def = {
     idle = {chance = 0.7, duration = 3, update_yaw = 6},
     walk = {chance = 0.3, duration = 5.5, moving_speed = 1.5},
     -- special modes
-    attack = {chance = 0, moving_speed = 2.5},
+    attack = {chance = 0, moving_speed = 2.5, duration = 20},
   },
 
   model = {
@@ -111,7 +110,7 @@ local def = {
   }
 }
 
-creatures.register_mob(def)
+creatures.register_mob("creatures:zombie", def)
 
 
 -- Place spawners in dungeons
