@@ -1,0 +1,8 @@
+# Settings applicable from Minetest GUI
+
+
+# Disable hostile MOBs
+creatures_disable_hostile (Disable hostile MOBs) bool false
+
+# Disable particles
+creatures_disable_particles (Disable particles) bool false
