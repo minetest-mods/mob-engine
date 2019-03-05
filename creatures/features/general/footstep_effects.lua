@@ -3,7 +3,7 @@
 Copyright (C) 2017 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
-get_staticdata.lua
+footstep_effects.lua
 
 This software is provided 'as-is', without any express or implied warranty. In no
 event will the authors be held liable for any damages arising from the use of
@@ -21,17 +21,14 @@ be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
 
--- Get Staticdata
-creatures.get_staticdata = function(self)
-	return {
-		hp = self.object:get_hp(),
-		mode = self.mode,
-		tamed = self.tamed,
-		modetimer = self.modetimer,
-		lifetimer = self.lifetimer,
-		soundtimer = self.soundtimer,
-		fall_dist = self.fall_dist,
-		in_water = self.in_water,
-	}
-end
 
+-- Register 'on_register_mob'
+creatures.register_on_register_mob(function(mob_name, def)
+	
+	def.ent_def.makes_footstep_sound = true
+	
+	if def.stats.sneaky then
+		def.ent_def.makes_footstep_sound = false
+	end
+	
+end)

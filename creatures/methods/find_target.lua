@@ -23,7 +23,7 @@ be misrepresented as being the original software.
 
 
 -- Find Target
-function creatures.find_target(search_obj, pos, radius, search_type, ignore_mob, xray, no_count)
+creatures.find_target = function(search_obj, pos, radius, search_type, ignore_mob, xray, no_count)
 	local player_near = false
 	local mobs = {}
 	for  _,obj in ipairs(core.get_objects_inside_radius(pos, radius)) do
@@ -69,6 +69,9 @@ function creatures.find_target(search_obj, pos, radius, search_type, ignore_mob,
 		end
 	end
 
-	return mobs,player_near
+	return mobs, player_near
 end
+
+-- Alias
+creatures.findTarget = creatures.find_target
 

@@ -21,31 +21,73 @@ be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
 
-
+-- Global index
 creatures = {}
 
 local modpath = core.get_modpath("creatures")
 
 
--- API features
-
--- Basic Methods
+-- Common functions
 dofile(modpath .."/common.lua")
-dofile(modpath .."/drop_items.lua")
-dofile(modpath .."/find_target.lua")
-dofile(modpath .."/kill_mob.lua")
-dofile(modpath .."/knockback.lua")
-dofile(modpath .."/change_hp.lua")
--- Mod Functions
-dofile(modpath .."/get_staticdata.lua")
-dofile(modpath .."/on_rightclick.lua")
-dofile(modpath .."/on_punch.lua")
-dofile(modpath .."/on_step.lua")
--- Register Methods
+
+-- Default values
+dofile(modpath .."/params.lua")
+
+
+-- Engine core
+
+-- MOB Callbacks
+dofile(modpath .."/callbacks.lua")
+
+-- MOB Registration
 dofile(modpath .."/register_mob.lua")
-dofile(modpath .."/register_spawn.lua")
-dofile(modpath .."/register_spawner.lua")
-dofile(modpath .."/register_spawner_egg.lua")
+
+dofile(modpath .."/methods/drop_items.lua")
+dofile(modpath .."/methods/find_target.lua")
+dofile(modpath .."/methods/kill_mob.lua")
+dofile(modpath .."/methods/spawn_particles.lua")
+
+
+-- Engine Features
+
+-- Aspects
+dofile(modpath .."/features/aspects/stats.lua")
+dofile(modpath .."/features/aspects/hp.lua")
+dofile(modpath .."/features/aspects/breath.lua")
+dofile(modpath .."/features/aspects/hostile.lua")
+dofile(modpath .."/features/aspects/visual.lua")
+dofile(modpath .."/features/aspects/physic.lua")
+
+-- Basic
+dofile(modpath .."/features/basic/combat.lua")
+dofile(modpath .."/features/basic/sounds.lua")
+dofile(modpath .."/features/basic/jump.lua")
+dofile(modpath .."/features/basic/drop.lua")
+dofile(modpath .."/features/basic/location.lua")
+dofile(modpath .."/features/basic/direction.lua")
+dofile(modpath .."/features/basic/fly.lua")
+
+-- General
+dofile(modpath .."/features/general/footstep_effects.lua")
+dofile(modpath .."/features/general/fallen.lua")
+dofile(modpath .."/features/general/lifetime.lua")
+dofile(modpath .."/features/general/swim.lua")
+dofile(modpath .."/features/general/burn.lua")
+dofile(modpath .."/features/general/on_hitted.lua")
+dofile(modpath .."/features/general/tame.lua")
+dofile(modpath .."/features/general/knockback.lua")
+
+-- Mode
+dofile(modpath .."/features/mode/modes.lua")
+dofile(modpath .."/features/mode/random_yaw.lua")
+dofile(modpath .."/features/mode/enemy_search.lua")
+dofile(modpath .."/features/mode/follow_search.lua")
+dofile(modpath .."/features/mode/random_sounds.lua")
+
+-- Spawn
+dofile(modpath .."/features/general/spawn.lua")
+dofile(modpath .."/features/general/spawner.lua")
+dofile(modpath .."/features/general/spawner_egg.lua")
 
 -- Common items
 dofile(modpath .."/items.lua")

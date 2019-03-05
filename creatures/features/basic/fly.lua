@@ -3,7 +3,7 @@
 Copyright (C) 2017 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
-knockback.lua
+fly.lua
 
 This software is provided 'as-is', without any express or implied warranty. In no
 event will the authors be held liable for any damages arising from the use of
@@ -22,32 +22,29 @@ be misrepresented as being the original software.
 ]]
 
 
--- Localizations
-local rnd = math.random
-
-
--- Knockback
-function creatures.knockback(selfOrObject, dir, old_dir, strengh)
-	local object = selfOrObject
-	if selfOrObject.mob_name then
-		object = selfOrObject.object
+-- Register 'on_register_mob'
+creatures.register_on_register_mob(function(mob_name, def)
+	
+	-- Check 'makes_footstep_sound' param
+	if def.stats.can_fly then
+		def.ent_def.makes_footstep_sound = true
 	end
-	local current_fmd = object:get_properties().automatic_face_movement_dir or 0
-	object:set_properties({automatic_face_movement_dir = false})
-	object:setvelocity(vector.add(old_dir, {x = dir.x * strengh, y = 3.5, z = dir.z * strengh}))
-	old_dir.y = 0
-	core.after(0.4, function()
-		object:set_properties({automatic_face_movement_dir = current_fmd})
-		object:setvelocity(old_dir)
-		selfOrObject.falltimer = nil
-		if selfOrObject.stunned == true then
-			selfOrObject.stunned = false
-			if selfOrObject.can_panic == true then
-				selfOrObject.target = nil
-				selfOrObject.mode = "_run"
-				selfOrObject.modetimer = 0
-			end
+	
+	-- Register 'on_activate'
+	creatures.register_on_activate(mob_name, function(self, staticdata)
+		
+		local def = creatures.registered_mobs[self.mob_name]
+		
+		-- Settings
+		self.can_fly = def.stats.can_fly
+		
+		if self.can_fly then
+			self.physic.gravity = false
 		end
+		
+		-- Update physic
+		creatures.update_physic(self)
 	end)
-end
+end)
+
 

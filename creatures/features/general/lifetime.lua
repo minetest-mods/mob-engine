@@ -3,7 +3,7 @@
 Copyright (C) 2017 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
-change_hp.lua
+lifetime.lua
 
 This software is provided 'as-is', without any express or implied warranty. In no
 event will the authors be held liable for any damages arising from the use of
@@ -21,43 +21,34 @@ be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
 
-
-local function on_hit(me)
-  core.after(0.1, function()
-    me:settexturemod("^[colorize:#c4000099")
-  end)
-  core.after(0.5, function()
-		me:settexturemod("")
+-- Register 'on_register_mob'
+creatures.register_on_register_mob(function(mob_name, def)
+	
+	-- Register 'on_activate'
+	creatures.register_on_activate(mob_name, function(self, staticdata)
+		
+		-- Timers
+		self.lifetimer = 0
+		
 	end)
-end
-
-
--- On Damage
-local function onDamage(self, hp)
-	local me = self.object
-	local def = core.registered_entities[self.mob_name]
-	hp = hp or me:get_hp()
-
-	if hp <= 0 then
-		self.stunned = true
-		creatures.kill_mob(me, def)
-	else
-		on_hit(me) -- red flashing
-		if def.sounds and def.sounds.on_damage then
-			local dmg_snd = def.sounds.on_damage
-			core.sound_play(dmg_snd.name, {pos = me:getpos(), max_hear_distance = dmg_snd.distance or 5, gain = dmg_snd.gain or 1})
+	
+	-- Register 'get_staticdata'
+	creatures.register_get_staticdata(mob_name, function(self)
+		return {
+			lifetimer = self.lifetimer,
+		}
+	end)
+	
+	-- Register 'on_step'
+	creatures.register_on_step(mob_name, function(self, dtime)
+		
+		-- Timer updates
+		self.lifetimer = self.lifetimer + dtime
+		
+		-- check lifetime
+		if self.lifetimer > def.stats.lifetime then
+			creatures.kill_mob(self)
 		end
-	end
-end
-
-
--- Change hp
-function creatures.change_hp(self, value)
-	local me = self.object
-	local hp = me:get_hp()
-	hp = hp + math.floor(value)
-	me:set_hp(hp)
-	if value < 0 then
-		onDamage(self, hp)
-	end
-end
+	end)
+	
+end)

@@ -3,7 +3,7 @@
 Copyright (C) 2017 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
-register_spawner.lua
+spawner.lua
 
 This software is provided 'as-is', without any express or implied warranty. In no
 event will the authors be held liable for any damages arising from the use of
@@ -123,7 +123,7 @@ end
 local spawner_timers = {}
 function creatures.register_spawner(spawner_def)
 	if not spawner_def or not spawner_def.mob_name or not spawner_def.model then
-		throw_error("Can't register Spawn-Egg. Not enough parameters given.")
+		creatures.throw_error("Can't register Spawn-Egg. Not enough parameters given.")
 		return false
 	end
 
@@ -191,3 +191,31 @@ function creatures.register_spawner(spawner_def)
 
 	return true
 end
+
+-- Register 'on_register_mob'
+creatures.register_on_register_mob(function(mob_name, def)
+	
+	-- Check hostile enabled
+	if def.stats.hostile and creatures.params.disable_hostile == true then
+		return
+	end
+	
+	-- Register Spawn
+	if def.spawning then
+	
+		local spawn_def = def.spawning
+		spawn_def.mob_name = def.name
+		spawn_def.mob_size = def.model.collisionbox
+		
+		-- Register Spawner
+		if spawn_def.spawner then
+			local spawner_def = def.spawning.spawner
+			spawner_def.mob_name = mob_name
+			spawner_def.range = spawner_def.range or 4
+			spawner_def.number = spawner_def.number or 6
+			spawner_def.model = def.model
+			creatures.register_spawner(spawner_def)
+		end
+		
+	end
+end)

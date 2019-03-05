@@ -3,7 +3,7 @@
 Copyright (C) 2017 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
-on_punch.lua
+on_hitted.lua
 
 This software is provided 'as-is', without any express or implied warranty. In no
 event will the authors be held liable for any damages arising from the use of
@@ -20,7 +20,6 @@ product, an acknowledgment in the product documentation is required.
 be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
-
 
 -- Add Wear out
 local tool_uses = {0, 30, 110, 150, 280, 300, 500, 1000}
@@ -64,36 +63,44 @@ local function calcPunchDamage(obj, actual_interval, tool_caps)
 	return damage or 0
 end
 
-
--- On Punch
-creatures.on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
-	if self.stunned == true then
-		return
-	end
-
-	local me = self.object
-	local mypos = me:getpos()
-
-	creatures.change_hp(self, calcPunchDamage(me, time_from_last_punch, tool_capabilities) * -1)
-	if puncher then
-		if self.hostile then
-			self.mode = "attack"
-			self.target = puncher
-		end
-		if time_from_last_punch >= 0.45 and self.stunned == false then
-			if self.has_kockback == true then
-				local v = me:getvelocity()
-				v.y = 0
-				if not self.can_fly then
-				me:setacceleration({x = 0, y = -15, z = 0})
-				end
-				creatures.knockback(self, dir, v, 5)
-				self.stunned = true
-			end
-
-			-- add wearout to weapons/tools
-			addWearout(puncher, tool_capabilities)
+-- Register 'on_hitted'
+local registered_on_hitted = {}
+creatures.register_on_hitted = function(func)
+	table.insert(registered_on_hitted, func)
+end
+-- Execute 'on_hitted'
+creatures.on_hitted = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
+	
+	-- Run registered 'on_hitted'
+	for _,f in ipairs(registered_on_hitted) do
+		local r = f(self, puncher, time_from_last_punch, tool_capabilities, dir)
+		if r == true then
+			return true
 		end
 	end
 end
 
+-- Register 'on_register_mob'
+creatures.register_on_register_mob(function(mob_name, def)
+	
+	-- Register 'on_punch'
+	creatures.register_on_punch(mob_name, function(self, puncher, time_from_last_punch, tool_capabilities, dir)
+		if self.stunned == true then
+			return true
+		end
+		
+		local me = self.object
+
+		creatures.change_hp(self, calcPunchDamage(me, time_from_last_punch, tool_capabilities) * -1)
+		if puncher then
+			if time_from_last_punch >= 0.45 and self.stunned == false then
+				-- Run registered 'on_hit'
+				creatures.on_hitted(self, puncher, time_from_last_punch, tool_capabilities, dir)
+				
+				-- add wearout to weapons/tools
+				addWearout(puncher, tool_capabilities)
+			end
+		end
+	end)
+	
+end)

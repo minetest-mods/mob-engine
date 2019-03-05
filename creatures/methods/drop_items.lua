@@ -40,7 +40,7 @@ function creatures.drop_items(pos, drops)
 			local ct = {}
 			ct[name] = chance
 			ct["_fake"] = 1 - chance
-			local res = creatures.rnd(ct)
+			local res = ct[creatures.get_random_index(ct)]
 			if res == "_fake" then
 				name = nil
 			end
@@ -65,3 +65,6 @@ function creatures.drop_items(pos, drops)
 		end
 	end
 end
+
+-- Alias
+creatures.dropItems = creatures.drop_items

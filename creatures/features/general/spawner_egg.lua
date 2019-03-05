@@ -3,7 +3,7 @@
 Copyright (C) 2017 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
-register_spawner_egg.lua
+spawner_egg.lua
 
 This software is provided 'as-is', without any express or implied warranty. In no
 event will the authors be held liable for any damages arising from the use of
@@ -54,8 +54,8 @@ end
 -- Register Spawn Egg
 function creatures.register_egg(egg_def)
 	if not egg_def or not egg_def.mob_name or not egg_def.box then
-	throw_error("Can't register Spawn-Egg. Not enough parameters given.")
-	return false
+		creatures.throw_error("Can't register Spawn-Egg. Not enough parameters given.")
+		return false
 	end
 	
 	-- Register CraftItem
@@ -69,3 +69,31 @@ function creatures.register_egg(egg_def)
 	})
 	return true
 end
+
+
+-- Register 'on_register_mob'
+creatures.register_on_register_mob(function(mob_name, def)
+	
+	-- Check hostile enabled
+	if def.stats.hostile and creatures.params.disable_hostile == true then
+		return
+	end
+	
+	-- Register Spawn
+	if def.spawning then
+	
+		local spawn_def = def.spawning
+		spawn_def.mob_name = mob_name
+		spawn_def.mob_size = def.model.collisionbox
+		
+		-- Register Spawn Egg
+		if spawn_def.spawn_egg then
+			local egg_def = def.spawning.spawn_egg
+			egg_def.mob_name = mob_name
+			egg_def.box = def.model.collisionbox
+			creatures.register_egg(egg_def)
+		end
+		
+	end
+end)
+

@@ -30,14 +30,14 @@ end
 
 
 -- Kill a Mob
-function creatures.kill_mob(me, def)
-	if not def then
-		if me then
-			me:remove()
-		end
-	end
+function creatures.kill_mob(self)
+	if not self then return end
+	
+	local def = creatures.get_def(self)
+	local me = self.object
+	
 	local pos = me:getpos()
-	me:setvelocity(nullVec)
+	me:setvelocity({x=0,z=0,y=0})
 	me:set_properties({collisionbox = nullVec})
 	me:set_hp(0)
 
@@ -62,5 +62,7 @@ function creatures.kill_mob(me, def)
 			creatures.drop_items(pos, def.drops)
 		end
 	end
+	
+	return true
 end
 

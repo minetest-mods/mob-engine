@@ -22,52 +22,40 @@ be misrepresented as being the original software.
 ]]
 
 
-
-
--- constants
-nullVec = {x = 0, y = 0, z = 0}
-DEGTORAD = math.pi / 180.0
-
--- common functions
-
-
--- Random
-function creatures.rnd(table, errval)
-	if not errval then
-		errval = false
+-- Get random index
+creatures.get_random_index = function(tb)
+	local index_table = {}
+	for index,d in pairs(tb) do
+		table.insert(index_table, index)
 	end
-
-	local res = 1000000000
-	local rn = math.random(0, res - 1)
-	local retval = nil
-
-	local psum = 0
-	for s,w in pairs(table) do
-		psum = psum + ((tonumber(w) or w.chance or 0) * res)
-		if psum > rn then
-			retval = s
-			break
-		end
-	end
-
-	return retval
+	return index_table[math.random(1, table.maxn(index_table))]
 end
-
 
 -- Error msg
-function throw_error(msg)
-	core.log("error", "#Creatures: ERROR: " .. msg)
+creatures.throw_error = function(msg)
+	core.log("error", "[Creatures]: " .. msg)
 end
 
-
--- Compare if 'pos1' is at 'pos2'
-function creatures.compare_pos(pos1, pos2)
-	if not pos1 or not pos2 then
+-- Get distance p1 to p2
+creatures.get_dist_p1top2 = function(p1, p2)
+	if not p1 or not p2 then
 		return
 	end
-	if pos1.x == pos2.x and pos1.y == pos2.y and pos1.z == pos2.z then
-		return false
-	end
-	return true
+	local dist = {
+		x=p2.x-p1.x, 
+		y=p2.y-p1.y, 
+		z=p2.z-p1.z
+	}
+	local real_dist = math.hypot(math.hypot(math.abs(dist.x), math.abs(dist.z)), math.abs(dist.y))
+	return real_dist, dist
 end
 
+-- Velocity add
+creatures.velocity_add = function(self, v_add)
+	local obj = self.object
+	local v = obj:getvelocity()
+	
+	local new_v = vector.add(v, v_add)
+	
+	obj:setvelocity(new_v)
+end

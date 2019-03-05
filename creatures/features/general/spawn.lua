@@ -3,7 +3,7 @@
 Copyright (C) 2017 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
-register_spawn.lua
+spawn.lua
 
 This software is provided 'as-is', without any express or implied warranty. In no
 event will the authors be held liable for any damages arising from the use of
@@ -92,7 +92,7 @@ end
 -- Register Spawn
 function creatures.register_spawn(spawn_def)
 	if not spawn_def or not spawn_def.abm_nodes then
-		throw_error("No valid definition for given.")
+		creatures.throw_error("No valid definition for given.")
 		return false
 	end
 	
@@ -184,3 +184,26 @@ function creatures.register_spawn(spawn_def)
 	return true
 end
 
+
+-- Register 'on_register_mob'
+creatures.register_on_register_mob(function(mob_name, def)
+	
+	-- Check hostile enabled
+	if def.stats.hostile and creatures.params.disable_hostile == true then
+		return
+	end
+	
+	-- Register Spawn
+	if def.spawning then
+	
+		local spawn_def = def.spawning
+		spawn_def.mob_name = mob_name
+		spawn_def.mob_size = def.model.collisionbox
+		
+		-- Register Spawn
+		if creatures.register_spawn(spawn_def) ~= true then
+			throw_error("Couldn't register spawning for '" .. mob_name .. "'")
+		end
+		
+	end
+end)
