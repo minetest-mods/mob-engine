@@ -84,7 +84,7 @@ creatures.register_mode("attack", {
 		self.mdt.follow_path = (self.mdt.follow_path or 0) + dtime
 		
 		-- Check target
-		if not self.target then
+		if not self.target or not self.target:get_pos() then
 			creatures.start_mode(self, "idle")
 			return
 		end
