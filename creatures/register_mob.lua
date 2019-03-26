@@ -25,9 +25,10 @@ be misrepresented as being the original software.
 creatures.registered_mobs = {}
 
 -- Get MOB definitions
-creatures.get_def = function(self)
+creatures.mob_def = function(self)
 	return creatures.registered_mobs[self.mob_name]
 end
+creatures.get_def = creatures.mob_def
 
 -- Organize a entity table for registration
 local function entity_table(mob_name, def)

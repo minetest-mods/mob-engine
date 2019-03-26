@@ -33,6 +33,13 @@ creatures.params.disable_particles = minetest.settings:get_bool("creatures_disab
 -- Default values
 creatures.default_value = {}
 
--- Aspects
+-- HP
 creatures.default_value.hp = 5
+
+-- Breath
 creatures.default_value.breath = 5
+
+-- Collision Box
+creatures.default_value.collisionbox_width = 0.9
+creatures.default_value.collisionbox_height = 0.9
+

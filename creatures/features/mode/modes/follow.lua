@@ -30,13 +30,14 @@ creatures.register_mode("follow", {
 		
 		-- Timer
 		self.mdt.follow = 0
-		
+		self.mdt.follow_walk = 0
 	end,
 	
 	-- On step
 	on_step = function(self, dtime)
 		
 		-- localize some things
+		local mode_def = creatures.mode_def(self)
 		local def = creatures.registered_mobs[self.mob_name]
 		local modes = def.modes
 		local current_mode = self.mode
@@ -47,6 +48,7 @@ creatures.register_mode("follow", {
 		
 		-- Timer update
 		self.mdt.follow = self.mdt.follow + dtime
+		self.mdt.follow_walk = self.mdt.follow_walk + dtime
 		
 		-- Check target
 		if not self.target then
@@ -54,19 +56,22 @@ creatures.register_mode("follow", {
 			return
 		end
 		
-		if self.followtimer > 0.6 then
+		if self.mdt.follow > 0.5 then
 			self.mdt.follow = 0
+			
+			-- Check target
+			if not self.target
+				or not (mode_def.items and mode_def.items[self.target:get_wielded_item():get_name()] == true)
+			then 
+				self.target = nil
+				creatures.start_mode(self, "idle")
+				return
+			end
 			
 			-- Target values
 			local p2 = self.target:getpos()
-			local dir = creatures.get_dir_p1top2(current_pos, p2)
 			
-			local offset
-			if self.can_fly then
-				offset = modes["fly"].target_offset
-			end
-			
-			local dist = getDistance(dir, offset)
+			local dist = creatures.get_dist_p1top2(current_pos, p2)
 			
 			-- Max distance radius for have a target
 			local radius = modes["follow"].radius
@@ -79,12 +84,12 @@ creatures.register_mode("follow", {
 			end
 			
 			-- Walk or run to the target
+			if self.mdt.follow_walk > 1 then
+				self.mdt.follow_walk = 0
 				
-			-- vector adjustment
-			self.dir = vector.normalize(dir)
-			creatures.set_dir(self, self.dir)
-			if self.in_water then
-				self.dir.y = me:getvelocity().y
+				creatures.set_dir(self, creatures.get_dir_p1top2(current_pos, p2))
+				creatures.send_in_dir(self, mode_def.moving_speed)
+				creatures.set_animation(self, "walk")
 			end
 		end
 		
@@ -92,4 +97,21 @@ creatures.register_mode("follow", {
 	end,
 })
 
+
+-- Register 'on_register_mob'
+creatures.register_on_register_mob(function(mob_name, def)
+
+	if not def.modes.follow then return end
+	
+	if def.modes.follow.items then
+		creatures.register_on_rightclick(mob_name, function(self, clicker)
+			local mode_def = creatures.mode_def(self, "follow")
+			if mode_def.items[clicker:get_wielded_item():get_name()] == true then
+				self.target = clicker
+				creatures.start_mode(self, "follow")
+			end
+		end)
+	end
+	
+end)
 

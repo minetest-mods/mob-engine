@@ -91,7 +91,11 @@ creatures.register_on_register_mob(function(mob_name, def)
 		
 		local me = self.object
 
-		creatures.change_hp(self, calcPunchDamage(me, time_from_last_punch, tool_capabilities) * -1)
+		creatures.change_hp(
+			self, 
+			(calcPunchDamage(me, time_from_last_punch, tool_capabilities) * -1),
+			"punched"
+		)
 		if puncher then
 			if time_from_last_punch >= 0.45 and self.stunned == false then
 				-- Run registered 'on_hit'

@@ -49,7 +49,8 @@ dofile(modpath .."/methods/drop_items.lua")
 dofile(modpath .."/methods/find_target.lua")
 dofile(modpath .."/methods/kill_mob.lua")
 dofile(modpath .."/methods/spawn_particles.lua")
-
+dofile(modpath .."/methods/get_under_walkable_height.lua")
+dofile(modpath .."/methods/get_under_walkable_nodes_in_area.lua")
 
 -- Engine Features
 
@@ -71,6 +72,8 @@ dofile(modpath .."/features/basic/direction.lua")
 dofile(modpath .."/features/basic/fly.lua")
 
 -- General
+dofile(modpath .."/features/general/remove.lua")
+dofile(modpath .."/features/general/death_effects.lua")
 dofile(modpath .."/features/general/footstep_effects.lua")
 dofile(modpath .."/features/general/fallen.lua")
 dofile(modpath .."/features/general/lifetime.lua")
@@ -79,6 +82,10 @@ dofile(modpath .."/features/general/burn.lua")
 dofile(modpath .."/features/general/on_hitted.lua")
 dofile(modpath .."/features/general/tame.lua")
 dofile(modpath .."/features/general/knockback.lua")
+dofile(modpath .."/features/general/path_finder.lua")
+dofile(modpath .."/features/general/path.lua")
+dofile(modpath .."/features/general/hit_bottom.lua")
+dofile(modpath .."/features/general/mob_node.lua")
 
 -- Mode
 dofile(modpath .."/features/mode/modes.lua")

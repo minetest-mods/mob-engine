@@ -146,7 +146,15 @@ function creatures.register_spawn(spawn_def)
 			-- creature count check
 			local max
 			if active_object_count_wider > (spawn_def.max_number or 1) then
-				local mates_num = #creatures.findTarget(nil, pos, 16, "mate", spawn_def.mob_name, true)
+				local mates_num = #creatures.find_target(
+					pos, 
+					16, 
+					{
+						search_type = "mate", 
+						mob_name = spawn_def.mob_name, 
+						xray = true
+					}
+				)
 				if (mates_num or 0) >= spawn_def.max_number then
 					return
 				else

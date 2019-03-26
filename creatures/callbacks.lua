@@ -186,3 +186,103 @@ creatures.on_activate = function(mob_name, self, staticdata)
 	end
 end
 
+-- Register 'on_clear_objects'
+creatures.register_on_clear_objects = function(mob_name, func)
+	-- Check 'on_activate'
+	if creatures.registered_mobs[mob_name].on_clear_objects_table == nil then
+		creatures.registered_mobs[mob_name].on_clear_objects_table = {}
+	end
+	
+	table.insert(creatures.registered_mobs[mob_name].on_clear_objects_table, func)
+end
+
+
+-- Execute 'on_die_mob'
+creatures.on_die_mob = function(mob_name, self, reason)
+	
+	-- Check 'on_die_mob'
+	if creatures.registered_mobs[mob_name].on_die_mob_table == nil then
+		creatures.registered_mobs[mob_name].on_die_mob_table = {}
+	end
+	
+	-- Run registered 'on_die_mob'
+	for _,f in ipairs(creatures.registered_mobs[mob_name].on_die_mob_table) do
+		local r = f(self, reason)
+		if r == true then
+			return r
+		end
+	end
+end
+
+-- Register 'on_die_mob'
+creatures.register_on_die_mob = function(mob_name, func)
+	-- Check 'on_die_mob'
+	if creatures.registered_mobs[mob_name].on_die_mob_table == nil then
+		creatures.registered_mobs[mob_name].on_die_mob_table = {}
+	end
+	
+	table.insert(creatures.registered_mobs[mob_name].on_die_mob_table, func)
+end
+
+
+-- Execute 'on_change_hp'
+creatures.on_change_hp = function(mob_name, self, hp)
+	
+	-- Check 'on_change_hp'
+	if creatures.registered_mobs[mob_name].on_change_hp_table == nil then
+		creatures.registered_mobs[mob_name].on_change_hp_table = {}
+	end
+	
+	-- Run registered 'on_change_hp'
+	for _,f in ipairs(creatures.registered_mobs[mob_name].on_change_hp_table) do
+		local r, new_hp = f(self, hp)
+		if new_hp then
+			hp = new_hp
+		end
+		if r == true then
+			return r, hp
+		end
+	end
+	
+	return true, hp
+end
+
+-- Register 'on_change_hp'
+creatures.register_on_change_hp = function(mob_name, func)
+	-- Check 'on_change_hp'
+	if creatures.registered_mobs[mob_name].on_change_hp_table == nil then
+		creatures.registered_mobs[mob_name].on_change_hp_table = {}
+	end
+	
+	table.insert(creatures.registered_mobs[mob_name].on_change_hp_table, func)
+end
+
+
+-- Execute 'on_clear_objects'
+creatures.on_clear_objects = function(mob_name, self)
+	
+	-- Check 'on_clear_objects'
+	if creatures.registered_mobs[mob_name].on_clear_objects_table == nil then
+		creatures.registered_mobs[mob_name].on_clear_objects_table = {}
+	end
+	
+	-- Run registered 'on_clear_objects'
+	for _,f in ipairs(creatures.registered_mobs[mob_name].on_clear_objects_table) do
+		f(self)
+	end
+end
+
+-- Execute 'on_clear_objects'
+local old_clear = minetest.clear_objects
+minetest.clear_objects = function(...)
+	
+	-- Run registered 'on_clear_objects'
+	for obj_id,self in pairs(minetest.luaentities) do
+		if self.mob_name then
+			creatures.on_clear_objects(self.mob_name, self)
+		end
+	end
+	
+	return old_clear(...)
+end
+

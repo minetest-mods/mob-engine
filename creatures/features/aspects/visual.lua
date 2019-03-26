@@ -43,3 +43,22 @@ creatures.register_on_register_mob(function(mob_name, def)
 	def.ent_def.model = def.model
 	
 end)
+
+-- Update animation
+creatures.set_animation = function(self, anim_name)
+	
+	local obj = self.object
+	
+	-- Animation definitions
+	local def = creatures.get_def(self).model.animations[anim_name]
+	
+	-- Check animation
+	if not def then return end
+	
+	obj:set_animation(
+		{x = def.start, y = def.stop}, 
+		def.speed, 
+		0, 
+		def.loop
+	)
+end

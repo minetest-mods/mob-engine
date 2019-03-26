@@ -47,7 +47,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 		
 		-- check lifetime
 		if self.lifetimer > def.stats.lifetime then
-			creatures.kill_mob(self)
+			creatures.kill_mob(self, "lifetime_elapsed")
 		end
 	end)
 	

@@ -38,16 +38,28 @@ end
 -- Pos to pos
 
 -- Get dir of p1 to p2
-creatures.get_dir_p1top2 = function(p1, p2)
+creatures.get_dir_p1top2 = function(p1, p2, include_y)
+	
 	local dist = {
 		x=p2.x-p1.x, 
+		y=0,
 		z=p2.z-p1.z
 	}
 	local real_dist = math.hypot(math.abs(dist.x), math.abs(dist.z))
+	
+	-- Include Y
+	if include_y == true then
+		dist.y = p2.y - p1.y
+		real_dist = math.hypot(real_dist, math.abs(dist.y))
+	end
+	
+	if real_dist == 0 then return end
+	
 	local p = 1/real_dist
+	
 	local dir = {
 		x = dist.x*p,
-		y = 0,
+		y = dist.y*p,
 		z = dist.z*p
 	}
 	return dir
@@ -56,6 +68,7 @@ end
 -- Get yaw of p1 to p2
 creatures.get_yaw_p1top2 = function(p1, p2)
 	local dir = creatures.get_dir_p1top2(p1, p2)
+	if not dir then return end
 	return creatures.dir_to_yaw(dir)
 end
 
@@ -85,6 +98,41 @@ creatures.set_dir = function(self, dir)
 	local yaw = creatures.dir_to_yaw(dir)
 	self.object:setyaw(yaw+math.rad(self.model.rotation))
 	self.dir = dir
+end
+
+-- Sending
+
+-- Send in dir
+creatures.send_in_dir = function(self, speed, dir, include_y)
+	if not dir then
+		dir = self.dir
+	end
+	
+	local obj = self.object
+	
+	local y = obj:getvelocity().y
+	
+	if include_y == true then
+		y = (dir.y or 0) * speed
+	end
+	
+	obj:setvelocity({
+		x = (dir.x or 0) * speed, 
+		y = y, 
+		z = (dir.z or 0) * speed
+	})
+end
+
+-- Send in yaw
+creatures.send_in_yaw = function(self, speed, yaw)
+	local dir
+	if yaw then
+		dir = creatures.yaw_to_dir(yaw)
+	else
+		dir = self.dir
+	end
+	
+	creatures.send_in_dir(self, speed, dir)
 end
 
 -- Register 'on_register_mob'

@@ -26,7 +26,7 @@ be misrepresented as being the original software.
 creatures.register_on_register_mob(function(mob_name, def)
 	
 	-- Check 'makes_footstep_sound' param
-	if def.stats.can_fly then
+	if def.stats.can_fly ~= true then
 		def.ent_def.makes_footstep_sound = true
 	end
 	
@@ -38,6 +38,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 		-- Settings
 		self.can_fly = def.stats.can_fly
 		
+		-- Check gravity
 		if self.can_fly then
 			self.physic.gravity = false
 		end

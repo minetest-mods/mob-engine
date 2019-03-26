@@ -1,6 +1,6 @@
 --[[
 = Creatures MOB-Engine (cme) =
-Copyright (C) 2017 Mob API Developers and Contributors
+Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
 follow_search.lua
@@ -23,19 +23,6 @@ be misrepresented as being the original software.
 
 local hasMoved = creatures.compare_pos
 
--- Find Target
-local findTarget = creatures.find_target
-
--- Check Wielded
-local function checkWielded(wielded, itemList)
-	for s,w in pairs(itemList) do
-		if w == wielded then
-			return true
-		end
-	end
-	return false
-end
-
 -- Register 'on_register_mob'
 creatures.register_on_register_mob(function(mob_name, def)
 	
@@ -43,7 +30,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 	creatures.register_on_activate(mob_name, function(self, staticdata)
 		
 		-- Timer
-		self.followSearchTimer = 0
+		self.timers.follow_search = 0
 		
 	end)
 	
@@ -51,7 +38,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 	creatures.register_on_step(mob_name, function(self, dtime)
 		
 		-- Timer update
-		self.followSearchTimer = self.followSearchTimer + dtime
+		self.timers.follow_search = self.timers.follow_search + dtime
 		local modes = def.modes
 		
 		-- localize some things
@@ -67,41 +54,27 @@ creatures.register_on_register_mob(function(mob_name, def)
 			-- if not target yet
 			not self.target 
 			-- and is a follower
-			and  modes["follow"]
-			-- and not in "_run" mode
-			and current_mode ~= "_run" 
+			and modes.follow
+			-- and not in "idle" mode
+			and current_mode == "idle" 
 		then
 			
-			-- get timer limit
-			local timer = modes["follow"].timer
-			
 			-- if elapsed timer
-			if self.followSearchTimer > (timer or 4) then
-				
-				-- reset timer
-				self.followSearchTimer = 0
-				
-				-- targets list
-				local targets = findTarget(me, current_pos, modes["follow"].radius or 5, "player")
-				
-				-- choose a random target
-				if #targets > 1 then
-					self.target = targets[rnd(1, #targets)]
-				elseif #targets == 1 then
-					self.target = targets[1]
-				end
+			if self.timers.follow_search > (modes.follow.search_timer or 4) then
+				self.timers.follow_search = 0
 				
 				-- if a target was found
-				if self.target then
+				for _,target in ipairs(creatures.find_target(creatures.get_vision_pos(self), modes.follow.radius or 5, {
+					search_type = "player",
+					ignore_obj = {me}
+				})) do
 					
 					-- change mode
 					-- check target wielded item
-					local name = self.target:get_wielded_item():get_name()
-					if name and checkWielded(name, modes["follow"].items) == true then
-						current_mode = "follow"
-						self.modetimer = 0
-					else
-						self.target = nil
+					local name = target:get_wielded_item():get_name()
+					if name and modes.follow.items[name] == true then
+						self.target = target
+						creatures.start_mode(self, "follow")
 					end
 				end
 			end

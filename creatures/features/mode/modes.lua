@@ -64,6 +64,11 @@ creatures.mode_velocity_update = function(self)
 	obj:setvelocity(new_v)
 end
 
+-- Get mode def
+creatures.mode_def = function(self, mode)
+	return creatures.registered_mobs[self.mob_name].modes[(mode or self.mode)]
+end
+
 
 -- Register 'on_register_mob'
 creatures.register_on_register_mob(function(mob_name, def)
@@ -112,12 +117,11 @@ creatures.register_on_register_mob(function(mob_name, def)
 		
 		-- Select a mode
 		if current_mode == "" then
-			
 			local new_mode = creatures.get_random_index(modes) or "idle"
 			
 			if new_mode == "panic" 
 				or new_mode == "swin" 
-				or new_mode == "attack" 
+				or new_mode == "attack"
 			then
 				new_mode = "idle"
 			end
@@ -131,10 +135,13 @@ creatures.register_on_register_mob(function(mob_name, def)
 			
 			-- Start
 			creatures.start_mode(self, current_mode)
+			
+			-- Update current_mode if changed when start
+			current_mode = self.mode
 		end
 		
 		-- Execute step modes
-		if creatures.registered_modes[current_mode] then
+		if creatures.registered_modes[current_mode] and creatures.registered_modes[current_mode].on_step then
 			
 			creatures.registered_modes[current_mode].on_step(self, dtime)
 		end
@@ -151,6 +158,17 @@ end)
 
 -- Start a mode
 creatures.start_mode = function(self, mode)
+	
+	-- Debug tool
+	--minetest.chat_send_all("Starting mode: "..mode)
+	
+	local mob_def = creatures.mob_def(self)
+	
+	-- Check mode
+	if not mob_def.modes[mode] then
+		creatures.throw_error("Mode "..dump(mode).." no registered in mob "..dump(self.mob_name))
+		mode = "idle"
+	end
 	
 	-- Update last mode
 	self.last_mode = self.mode
@@ -171,8 +189,11 @@ creatures.register_mode = function(modename, def)
 	return true
 end
 
+dofile(modpath .."/features/mode/modes/fly.lua")
 dofile(modpath .."/features/mode/modes/walk.lua")
+dofile(modpath .."/features/mode/modes/walk_around.lua")
 dofile(modpath .."/features/mode/modes/panic.lua")
 dofile(modpath .."/features/mode/modes/follow.lua")
 dofile(modpath .."/features/mode/modes/attack.lua")
 dofile(modpath .."/features/mode/modes/eat.lua")
+dofile(modpath .."/features/mode/modes/idle.lua")

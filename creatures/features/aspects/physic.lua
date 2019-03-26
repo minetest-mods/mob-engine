@@ -32,16 +32,35 @@ creatures.update_physic = function(self)
 	end
 end
 
+-- Make collisionbox
+creatures.make_collisionbox = function(width, height)
+	return {
+		(width/-2), -0.01, (width/-2), 
+		(width/2), height, (width/2)
+	}
+end
+
+-- Get position of MOB vision
+creatures.get_vision_pos = function(self)
+	local pos = self.object:get_pos()
+	pos.y = pos.y + self.vision_height
+	return pos
+end
 
 -- Register 'on_register_mob'
 creatures.register_on_register_mob(function(mob_name, def)
 	
+	-- Check values
+	def.model.collisionbox_width = def.model.collisionbox_width or creatures.default_value.collisionbox_width
+	def.model.collisionbox_height = def.model.collisionbox_height or creatures.default_value.collisionbox_height
+	
 	-- Entity definitions
-	def.ent_def.stepheight = 0.6 -- ensure we get over slabs/stairs
-	def.ent_def.collisionbox = def.model.collisionbox or {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}
+	def.ent_def.stepheight = 0.1 -- ensure we get over slabs/stairs
+	def.ent_def.collisionbox = def.model.collisionbox or creatures.make_collisionbox(def.model.collisionbox_width, def.model.collisionbox_height)
+	def.model.collisionbox = def.ent_def.collisionbox
 	def.ent_def.collide_with_objects = def.model.collide_with_objects or true
 	def.ent_def.physical = true
-	
+	def.ent_def.vision_height = def.model.vision_height or 0
 	
 	-- Register 'on_activate'
 	creatures.register_on_activate(mob_name, function(self, staticdata)
@@ -54,4 +73,36 @@ creatures.register_on_register_mob(function(mob_name, def)
 	end)
 end)
 
+-- Checks whether a body can be placed in a pos
+creatures.check_mob_in_pos = function(self, pos)
+	local c = self.collisionbox
+	local w, h = math.ceil(math.abs(c[1]) + c[4]), math.ceil(math.abs(c[2]) + c[5])
+	
+	-- Extra nodes for width
+	local ew = 0
+	w = (w/2)-0.5
+	while w > 0 do
+		ew = ew + 1
+		w = w - 1
+	end
+	
+	-- Extra nodes for height
+	local eh = h
+	
+	local x, y, z = (ew*-1), 0, (ew*-1)
+	while x <= ew do
+		while y <= eh do
+			while z <= ew do
+				if creatures.check_free_pos(pos) == false then
+					return true
+				end
+				z = z + 1
+			end
+			y = y + 1
+		end
+		x = x + 1
+	end
+	
+	return true
+end
 

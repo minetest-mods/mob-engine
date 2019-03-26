@@ -84,13 +84,13 @@ creatures.register_on_register_mob(function(mob_name, def)
 	
 		local spawn_def = def.spawning
 		spawn_def.mob_name = mob_name
-		spawn_def.mob_size = def.model.collisionbox
+		spawn_def.mob_size = def.ent_def.collisionbox
 		
 		-- Register Spawn Egg
 		if spawn_def.spawn_egg then
 			local egg_def = def.spawning.spawn_egg
 			egg_def.mob_name = mob_name
-			egg_def.box = def.model.collisionbox
+			egg_def.box = def.ent_def.collisionbox
 			creatures.register_egg(egg_def)
 		end
 		

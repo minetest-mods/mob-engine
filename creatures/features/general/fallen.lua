@@ -32,7 +32,8 @@ creatures.register_on_register_mob(function(mob_name, def)
 	creatures.register_on_activate(mob_name, function(self, staticdata)
 		
 		-- Params
-		self.has_falldamage = def.stats.has_falldamage
+		def.stats.has_falldamage = def.stats.has_falldamage
+		def.stats.max_drop = def.stats.max_drop or 2
 		
 	end)
 	
@@ -40,11 +41,14 @@ creatures.register_on_register_mob(function(mob_name, def)
 	creatures.register_on_step(mob_name, function(self, dtime)
 		
 		-- Timer update
-		if self.falltimer == nil then self.falltimer = 0 end
-		self.falltimer = self.falltimer + dtime
+		self.falltimer = (self.falltimer or 0) + dtime
 		
 		if self.falltimer >= 0.1 then
 			self.falltimer = 0
+			
+			local def = creatures.get_def(self)
+			
+			if def.stats.has_falldamage ~= true then return end
 			
 			self.falling_timer = self.falltimer + 0.1
 			local me = self.object

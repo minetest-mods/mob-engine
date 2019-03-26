@@ -25,6 +25,8 @@ be misrepresented as being the original software.
 -- Register 'on_register_mob'
 creatures.register_on_register_mob(function(mob_name, def)
 	
+	def.ent_def.stepheight = 0.1
+	
 	-- Stepheight adjustment
 	if def.stats.can_jump 
 		and type(def.stats.can_jump) == "number" 

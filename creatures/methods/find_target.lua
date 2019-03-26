@@ -1,6 +1,6 @@
 --[[
 = Creatures MOB-Engine (cme) =
-Copyright (C) 2017 Mob API Developers and Contributors
+Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
 find_target.lua
@@ -23,11 +23,26 @@ be misrepresented as being the original software.
 
 
 -- Find Target
-creatures.find_target = function(search_obj, pos, radius, search_type, ignore_mob, xray, no_count)
+creatures.find_target = function(pos, radius, search_def)
+	
+	-- Params
+	local ignore_obj = search_def.ignore_obj or {}
+	local search_type = search_def.search_type
+	local mob_name = search_def.mob_name
+	local xray = search_def.xray
+	local no_count = search_def.no_count
+	
+	-- Ignored objects
+	local io = {}
+	for _,obj in ipairs(ignore_obj) do
+		io[tostring(obj)] = true
+	end
+	
+	-- Player near
 	local player_near = false
 	local mobs = {}
 	for  _,obj in ipairs(core.get_objects_inside_radius(pos, radius)) do
-		if obj ~= search_obj then
+		if io[tostring(obj)] ~= true then
 			if xray or core.line_of_sight(pos, obj:getpos()) == true then
 				local is_player = obj:is_player()
 				if is_player then
@@ -38,7 +53,7 @@ creatures.find_target = function(search_obj, pos, radius, search_type, ignore_mo
 				end
 				local entity = obj:get_luaentity()
 				local isItem = (entity and entity.name == "__builtin:item") or false
-				local ignore = (entity and entity.mob_name == ignore_mob and search_type ~= "mates") or false
+				local ignore = (entity and entity.mob_name == mob_name and search_type ~= "mates") or false
 
 				if search_type == "all" then
 					if not isItem and not ignore then
@@ -61,7 +76,7 @@ creatures.find_target = function(search_obj, pos, radius, search_type, ignore_mo
 					end
 					
 				elseif search_type == "mate" then
-					if not isItem and (entity and entity.mob_name == ignore_mob) then
+					if not isItem and (entity and entity.mob_name == mob_name) then
 					table.insert(mobs, obj)
 					end
 				end

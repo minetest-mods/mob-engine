@@ -60,14 +60,14 @@ local function on_hit(me)
 end
 
 -- On Damage
-local function onDamage(self, hp)
+local function onDamage(self, hp, reason)
 	local me = self.object
 	local def = core.registered_entities[self.mob_name]
 	hp = hp or me:get_hp()
 
 	if hp <= 0 then
 		self.stunned = true
-		creatures.kill_mob(self)
+		creatures.kill_mob(self, reason)
 	else
 		on_hit(me) -- red flashing
 		if def.sounds and def.sounds.on_damage then
@@ -79,13 +79,18 @@ end
 
 
 -- Change hp
-function creatures.change_hp(self, value)
+creatures.change_hp = function(self, value, reason)
 	local me = self.object
 	local hp = me:get_hp()
 	hp = hp + math.floor(value)
+	
+	local r, hp = creatures.on_change_hp(self.mob_name, self, hp)
+	
 	me:set_hp(hp)
 	if value < 0 then
-		onDamage(self, hp)
+		onDamage(self, hp, reason)
 	end
 end
+
+
 

@@ -21,40 +21,18 @@ be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
 
--- Update animation
-local function update_animation(obj_ref, mode, anim_def)
-	if anim_def and obj_ref then
-		obj_ref:set_animation({x = anim_def.start, y = anim_def.stop}, anim_def.speed, 0, anim_def.loop)
-	end
-end
-
 
 -- Kill a Mob
-function creatures.kill_mob(self)
+creatures.kill_mob = function(self, reason)
 	if not self then return end
 	
-	local def = creatures.get_def(self)
+	local def = creatures.mob_def(self)
 	local me = self.object
 	
 	local pos = me:getpos()
 	me:setvelocity({x=0,z=0,y=0})
-	me:set_properties({collisionbox = nullVec})
-	me:set_hp(0)
-
-	if def.sounds and def.sounds.on_death then
-		local death_snd = def.sounds.on_death
-		core.sound_play(death_snd.name, {pos = pos, max_hear_distance = death_snd.distance or 5, gain = death_snd.gain or 1})
-	end
-
-	if def.model.animations.death then
-		local dur = def.model.animations.death.duration or 0.5
-		update_animation(me, "death", def.model.animations["death"])
-		core.after(dur, function()
-		me:remove()
-		end)
-	else
-		me:remove()
-	end
+	me:set_hp(1)
+	
 	if def.drops then
 		if type(def.drops) == "function" then
 			def.drops(me:get_luaentity())
@@ -62,6 +40,8 @@ function creatures.kill_mob(self)
 			creatures.drop_items(pos, def.drops)
 		end
 	end
+	
+	creatures.on_die_mob(self.mob_name, self, reason)
 	
 	return true
 end

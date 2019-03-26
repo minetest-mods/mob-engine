@@ -1,6 +1,6 @@
 --[[
 = Creatures MOB-Engine (cme) =
-Copyright (C) 2017 Mob API Developers and Contributors
+Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
 enemy_search.lua
@@ -21,10 +21,6 @@ be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
 
-local hasMoved = creatures.compare_pos
-
--- Find Target
-local findTarget = creatures.find_target
 
 -- Register 'on_register_mob'
 creatures.register_on_register_mob(function(mob_name, def)
@@ -33,7 +29,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 	creatures.register_on_activate(mob_name, function(self, staticdata)
 		
 		-- Timer
-		self.enemySearchTimer = 0
+		self.timers.search_enemy = 0
 		
 	end)
 	
@@ -41,7 +37,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 	creatures.register_on_step(mob_name, function(self, dtime)
 		
 		-- Timer update
-		self.enemySearchTimer = self.enemySearchTimer + dtime
+		self.timers.search_enemy = self.timers.search_enemy + dtime
 		
 		-- localize some things
 		local modes = def.modes
@@ -57,21 +53,23 @@ creatures.register_on_register_mob(function(mob_name, def)
 			not self.target 
 			-- and is a hostile
 			and (self.hostile and def.combat.search_enemy)
-			-- and not in "_run" mode
-			and current_mode ~= "_run" 
+			-- and not in "panic" mode
+			and current_mode ~= "panic" 
 		then
 			
-			-- get timer limit
-			local timer = def.combat.search_timer or 2
-			
 			-- if elapsed timer
-			if self.enemySearchTimer > (timer or 4) then
+			if self.timers.search_enemy > (def.combat.search_timer or 2) then
 				
 				-- reset timer
-				self.enemySearchTimer = 0
+				self.timers.search_enemy = 0
 				
 				-- targets list
-				local targets = findTarget(me, current_pos, def.combat.search_radius, def.combat.search_type, def.combat.search_xray)
+				local targets = creatures.find_target(creatures.get_vision_pos(self), def.combat.search_radius, {
+					search_type = def.combat.search_type, 
+					mob_name = def.combat.search_name, 
+					xray = def.combat.search_xray,
+					ignore_obj = {me},
+				})
 				
 				-- choose a random target
 				if #targets > 1 then
