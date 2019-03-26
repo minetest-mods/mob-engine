@@ -39,9 +39,9 @@ local function setColor(self)
 	if self and self.object then
 		local ext = ".png"
 		if self.has_wool ~= true then
-			ext = ".png^(creatures_sheep_shaved.png^[colorize:" .. self.wool_color:gsub("grey", "gray") .. ":50)"
+			ext = ".png^(sheep_shaved.png^[colorize:" .. self.wool_color:gsub("grey", "gray") .. ":50)"
 		end
-		self.object:set_properties({textures = {"creatures_sheep.png^creatures_sheep_" .. self.wool_color .. ext}})
+		self.object:set_properties({textures = {"sheep.png^sheep_" .. self.wool_color .. ext}})
 	end
 end
 
@@ -73,37 +73,22 @@ local def = {
 		has_falldamage = true,
 		has_kockback = true,
 	},
-
-	model = {
-		mesh = "creatures_sheep.b3d",
-		textures = {"creatures_sheep.png^creatures_sheep_white.png"},
-		collisionbox = {-0.5, -0.01, -0.55, 0.5, 1.1, 0.55},
-		rotation = -90.0,
-		animations = {
-			idle = {start = 1, stop = 60, speed = 15},
-			walk = {start = 81, stop = 101, speed = 18},
-			walk_long = {start = 81, stop = 101, speed = 18},
-			eat = {start = 107, stop = 170, speed = 12, loop = false},
-			follow = {start = 81, stop = 101, speed = 15},
-			death = {start = 171, stop = 191, speed = 32, loop = false, duration = 2.52},
-		},
-	},
-
-	sounds = {
-		on_damage = {name = "creatures_sheep", gain = 1.0, distance = 10},
-		on_death = {name = "creatures_sheep", gain = 1.0, distance = 10},
-		swim = {name = "creatures_splash", gain = 1.0, distance = 10,},
-		random = {
-			idle = {name = "creatures_sheep", gain = 0.6, distance = 10, time_min = 23},
-		},
-	},
-
+	
 	modes = {
-		idle = {chance = 0.5, duration = 10, update_yaw = 8},
-		walk = {chance = 0.14, duration = 4.5, moving_speed = 1.3},
-		walk_long = {chance = 0.11, duration = 8, moving_speed = 1.3, update_yaw = 5},
+		idle = {chance = 0.5, duration = 10, random_yaw = 4},
+		walk = {
+			chance = 0.14, 
+			duration = 20, 
+			moving_speed = 1.3,
+			search_radius = 5
+		},
+		walk_around = {
+			chance = 0.2, 
+			duration = 20, 
+			moving_speed = 0.7
+		},
 		-- special modes
-		follow = {chance = 0, duration = 20, radius = 4, timer = 5, moving_speed = 1, items = {"farming:wheat"}},
+		follow = {chance = 0, duration = 20, radius = 4, moving_speed = 1, items = {["farming:wheat"]=true}, search_timer = 4},
 		eat = {	chance = 0.25,
 			duration = 4,
 			nodes = {
@@ -112,7 +97,32 @@ local def = {
 			}
 		},
 	},
+	
+	model = {
+		mesh = "sheep.b3d",
+		textures = {"sheep.png^sheep_white.png"},
+		collisionbox_width = 0.9,
+		collisionbox_height = 1.2,
+		rotation = 0.0,
+		vision_height = 0.9,
+		animations = {
+			idle = {start = 1, stop = 60, speed = 15},
+			walk = {start = 81, stop = 101, speed = 18},
+			eat = {start = 107, stop = 170, speed = 12, loop = false},
+			follow = {start = 81, stop = 101, speed = 15},
+			death = {start = 171, stop = 191, speed = 32, loop = false, duration = 2.52},
+		},
+	},
 
+	sounds = {
+		on_damage = {name = "sheep", gain = 1.0, distance = 10},
+		on_death = {name = "sheep", gain = 1.0, distance = 10},
+		swim = {name = "creatures_splash", gain = 1.0, distance = 10,},
+		random = {
+			idle = {name = "sheep", gain = 0.6, distance = 10, time_min = 23},
+		},
+	},
+	
 	drops = function(self)
 		local items = {{"creatures:flesh"}}
 		if self.has_wool then
@@ -135,7 +145,7 @@ local def = {
 
 		spawn_egg = {
 			description = "Sheep Spawn-Egg",
-			texture = "creatures_egg_sheep.png",
+			texture = "egg_sheep.png",
 		},
 
 		spawner = {
@@ -171,28 +181,16 @@ local def = {
 
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
-			if item then
-				local name = item:get_name()
-				if name == "farming:wheat" then
-					self.target = clicker
-					self.mode = "follow"
-					self.modetimer = 0
-
-					if not self.tamed then
-						self.fed_cnt = (self.fed_cnt or 0) + 1
-					end
-
-					-- play eat sound?
-					item:take_item()
-				elseif name == "creatures:shears" and self.has_wool then
-					shear(self, math.random(2, 3), true)
-					item:add_wear(65535/100)
-				end
-				if not minetest.settings:get_bool("creative_mode") then
-					clicker:set_wielded_item(item)
-				end
+		if item then
+			local name = item:get_name()
+			if name == "creatures:shears" and self.has_wool then
+				shear(self, math.random(2, 3), true)
+				item:add_wear(65535/100)
 			end
-		return true
+			if not minetest.settings:get_bool("creative_mode") then
+				clicker:set_wielded_item(item)
+			end
+		end
 	end,
 
 	on_step = function(self, dtime)

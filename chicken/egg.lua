@@ -29,7 +29,7 @@ local function timer(step, entity)
 	if entity.physical_state == false then
 		if entity.ref then
 			if math.random(1, 20) == 5 then
-				core.add_entity(entity.ref:getpos(), "creatures:chicken")
+				core.add_entity(entity.ref:getpos(), "chicken:chicken")
 			end
 			entity.ref:remove()
 		end
@@ -44,7 +44,7 @@ function throw_egg(player, strength)
 	local dir = player:get_look_dir()
 	pos.x = pos.x + dir.x
 	pos.z = pos.z + dir.z
-	local obj = minetest.add_item(pos, "creatures:egg")
+	local obj = minetest.add_item(pos, "chicken:egg")
 	if obj then
 		local entity = obj:get_luaentity()
 		entity.ref = obj
@@ -57,13 +57,10 @@ function throw_egg(player, strength)
 	return false
 end
 
-core.register_craftitem(":creatures:egg", {
+core.register_craftitem("chicken:egg", {
 	description = "Egg",
-	inventory_image = "creatures_egg.png",
+	inventory_image = "chicken_egg.png",
 	on_use = function(itemstack, user, pointed_thing)
-		--if pointed_thing.type ~= "none" then
-		--	return
-		--end
 		if throw_egg(user, 12) then
 			itemstack:take_item()
 		end
@@ -71,14 +68,109 @@ core.register_craftitem(":creatures:egg", {
 	end,
 })
 
-core.register_craftitem(":creatures:fried_egg", {
+core.register_craftitem("chicken:fried_egg", {
 	description = "Fried Egg",
-	inventory_image = "creatures_fried_egg.png",
+	inventory_image = "chicken_fried_egg.png",
 	on_use = core.item_eat(2)
 })
 
 core.register_craft({
 	type = "cooking",
-	output = "creatures:fried_egg",
-	recipe = "creatures:egg",
+	output = "chicken:fried_egg",
+	recipe = "chicken:egg",
 })
+
+
+local on_finish_path = function(self)
+	-- Stop movement
+	creatures.send_in_dir(self, 0, {x=0,z=0})
+	-- Stop walk animation
+	creatures.set_animation(self, "idle")
+	
+	-- Restart mode
+	creatures.start_mode(self, "chicken:dropegg")
+end
+
+local on_interrupt_path = function(self)
+	-- Stop movement
+	creatures.send_in_dir(self, 0, {x=0,z=0})
+	-- Stop walk animation
+	creatures.set_animation(self, "idle")
+	
+	-- Finish mode
+	creatures.start_mode(self, "idle")
+end
+
+-- Drop Egg mode ("dropegg")
+creatures.register_mode("chicken:dropegg", {
+	
+	-- On step
+	start = function(self, dtime)
+		
+		-- Last day when dropped egg
+		self["chicken:last_dropday"] = self["chicken:last_dropday"] or 0
+		
+		-- Today
+		local today = core.get_day_count()
+		
+		-- Check if drop egg today
+		if self["chicken:last_dropday"] ~= today and creatures.check_mob_node(self) == true then
+			
+			local walk_mode = creatures.mode_def(self, "walk")
+			local current_pos = self.object:get_pos()
+			
+			local pmn = creatures.copy_tb(self.mob_node.pos)
+			pmn.y = pmn.y - 0.4
+			
+			-- Check if is in the nest
+			local d, vd = creatures.get_dist_p1top2(current_pos, pmn)
+			if math.abs(vd.x) < 0.25 and math.abs(vd.z) < 0.25 then
+				
+				-- Drop Egg
+				local ps = creatures.copy_tb(self.mob_node.pos)
+				ps.y = ps.y - 0.3
+				core.add_item(ps, "chicken:egg")
+				self["chicken:last_dropday"] = today
+				
+				-- Move chicken to nest center
+				ps.y = ps.y - 0.18
+				self.object:set_pos(ps)
+				
+				-- Finish mode
+				creatures.start_mode(self, "idle")
+				
+			-- Go to nest
+			else
+			
+				-- Walk to nest
+				if creatures.new_path( -- Try find path
+					self, 
+					self.mob_node.pos, 
+					walk_mode.moving_speed,
+					on_finish_path,
+					on_interrupt_path,
+					{
+						target_dist = 0.2,
+					}
+				) == true then
+				
+					-- Start walk animation
+					creatures.set_animation(self, "walk")
+				else
+				
+					-- Finish mode
+					creatures.start_mode(self, "idle")
+				end
+				
+			end
+		end
+	end,
+	
+	-- On step
+	on_step = function(self, dtime)
+	
+		creatures.path_step(self, dtime)
+		
+	end,
+})
+
