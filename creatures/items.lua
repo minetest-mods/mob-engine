@@ -39,3 +39,22 @@ core.register_craft({
 	output = "creatures:meat",
 	recipe = "creatures:flesh",
 })
+
+core.register_craftitem("creatures:rotten_flesh", {
+	description = "Rotten Flesh",
+	inventory_image = "creatures_rotten_flesh.png",
+	on_use = core.item_eat(1),
+})
+
+core.register_tool("creatures:shears", {
+	description = "Shears",
+	inventory_image = "creatures_shears.png",
+})
+
+core.register_craft({
+	output = 'creatures:shears',
+	recipe = {
+		{'', 'default:steel_ingot'},
+		{'default:steel_ingot', 'default:stick'},
+	}
+})
