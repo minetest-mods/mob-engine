@@ -40,7 +40,7 @@ local function makeSpawnerEntiy(mob_name, model)
 	hp_max = 1,
 	physical = false,
 	collide_with_objects = false,
-	collisionbox = nullVec,
+	collisionbox = {0,0,0, 0,0,0},
 	visual = "mesh",
 	visual_size = {x = 0.42, y = 0.42},
 	mesh = model.mesh,
