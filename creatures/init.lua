@@ -39,6 +39,9 @@ dofile(modpath .."/params.lua")
 -- MOB Callbacks
 dofile(modpath .."/callbacks.lua")
 
+-- Fence/wall adjust
+dofile(modpath .."/fence_adjust.lua")
+
 -- MOB Registration
 dofile(modpath .."/register_mob.lua")
 
