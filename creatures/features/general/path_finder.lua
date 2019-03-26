@@ -91,8 +91,124 @@ local check_new_p = function(self, w, new_p, max_jump, max_drop)
 	return w
 end
 
+
+local get_pos_p1top2 = function(p1, p2, movement)
+
+	local dist = {
+		x=p1.x-p2.x, 
+		y=0,
+		z=p1.z-p2.z
+	}
+	local real_dist = math.hypot(math.abs(dist.x), math.abs(dist.z))
+	
+	local new_dist = real_dist - movement
+	
+	if new_dist < 0 then 
+		return 
+	end
+	
+	local fator = new_dist / real_dist
+	
+	-- Subtract dist coord
+	dist = vector.multiply(dist, fator)
+	
+	-- New pos
+	local pos = {
+		x = p2.x + dist.x,
+		y = p2.y,
+		z = p2.z + dist.z,
+	}
+	
+	return pos
+end
+
+-- Find a direct path
+creatures.direct_path_finder = function(self, target_pos, search_def)
+	local pos1 = creatures.get_node_pos_object(self.object)
+	local pos2 = cp(target_pos)
+	
+	local mob_def = creatures.get_def(self)
+	
+	search_def.search_radius = search_def.search_radius or 10
+	local search_radius = search_def.search_radius
+	search_def.perssist = search_def.perssist or (search_def.search_radius + 5)
+	
+	-- Max jump
+	search_def.max_jump = math.floor(search_def.max_jump or self.stepheight)
+	
+	-- Max drop
+	search_def.max_drop = math.floor(search_def.max_drop or mob_def.stats.max_drop)
+	
+	-- Get int
+	pos1 = {
+		x = int(pos1.x),
+		y = int(pos1.y),
+		z = int(pos1.z)
+	}
+	pos2 = {
+		x = int(pos2.x),
+		y = int(pos2.y),
+		z = int(pos2.z)
+	}
+	
+	-- Step
+	local s = 0
+	
+	-- Steps limit
+	local sl = search_def.perssist
+	
+	-- Way
+	local way = new_way(pos1)
+	
+	-- Minimum distance
+	local dist = creatures.get_dist_p1top2(pos1, pos2)
+	
+	-- Maximum distance
+	local max_dist = search_radius + 5
+	
+	while (s <= sl) do
+		s = s + 1
+			
+		local last_pos = way.pts[table.maxn(way.pts)]
+		
+		-- Current distance
+		local d = creatures.get_dist_p1top2(last_pos, pos2)
+		
+		-- Check if finished 
+		--[[
+			Uses 1 to consider arriving at the top block to the nodebox block
+		]]
+		if d <= (search_def.target_dist or 1) then
+			return cp(way.pts)
+		end
+		
+		local new_p = get_pos_p1top2(cp(last_pos), cp(target_pos), 1)
+		
+		if not new_p then
+			return
+		end
+		
+		way = check_new_p(self, cp(way), new_p, search_def.max_jump, search_def.max_drop)
+		if not way then
+			return
+		end
+		
+	end
+	
+	return 
+end
+
 -- Find a path
 creatures.path_finder = function(self, target_pos, search_def)
+	
+	-- Try direct way
+	do
+		local way = creatures.direct_path_finder(self, target_pos, search_def)
+		if way then
+			return cp(way)
+		end
+	end
+	
 	local pos1 = creatures.get_node_pos_object(self.object)
 	local pos2 = target_pos
 	
