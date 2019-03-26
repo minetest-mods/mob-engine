@@ -155,3 +155,6 @@ local def = {
 }
 
 creatures.register_mob("chicken:chicken", def)
+
+-- Nest
+dofile(core.get_modpath("chicken") .. "/nest.lua")
