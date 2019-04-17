@@ -48,23 +48,20 @@ creatures.register_on_register_mob(function(mob_name, def)
 			
 			-- localize some things
 			local me = self.object
-			local current_pos = me:getpos()
-			current_pos.y = current_pos.y + 0.5
-			self.moved = vector.equals(current_pos, self.last_pos)
+			local current_pos = me:get_pos()
+			self.moved = not vector.equals(current_pos, self.last_pos)
 			
 			-- Check 'current_node'
 			if self.current_node == nil then self.current_node = core.get_node_or_nil(current_pos) end
 			
-			
 			-- Update pos and current node if necessary
 			if self.moved == true or self.last_node.name == "ignore" then
-				
+			
 				-- Update last locate
 				self.last_pos = current_pos
 				self.last_node = self.current_node
 				
 				self.current_node = core.get_node_or_nil(current_pos)
-				
 			end
 			
 		end

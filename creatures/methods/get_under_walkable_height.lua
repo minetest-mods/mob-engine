@@ -35,7 +35,12 @@ creatures.get_under_walkable_height = function(pos, minh, maxh)
 	
 	while h >= (minh-1) do
 		if creatures.check_free_pos({x=pos.x,y=h,z=pos.z}) == false then
-			return h + 1
+			-- Check if is wall/fence
+			if creatures.is_wall({x=pos.x,y=h,z=pos.z}) == true then
+				return h + 2
+			else
+				return h + 1
+			end
 		end
 		h = h - 1 -- Finish with minh-2
 	end

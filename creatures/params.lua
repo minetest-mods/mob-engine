@@ -43,3 +43,7 @@ creatures.default_value.breath = 5
 creatures.default_value.collisionbox_width = 0.9
 creatures.default_value.collisionbox_height = 0.9
 
+-- Weight
+creatures.default_value.weight = 45
+
+

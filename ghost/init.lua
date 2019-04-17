@@ -101,4 +101,4 @@ local def = {
 	},
 }
 
-creatures.register_mob("creatures:ghost", def)
+creatures.register_mob("ghost:ghost", def)

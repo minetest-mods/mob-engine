@@ -51,8 +51,8 @@ local function makeSpawnerEntiy(mob_name, model)
 
 	on_activate = function(self)
 		self.timer = 0
-		self.object:setvelocity(nullVec)
-		self.object:setacceleration(nullVec)
+		self.object:setvelocity({x=0,y=0,z=0})
+		self.object:setacceleration({x=0,y=0,z=0})
 		self.object:set_armor_groups({immortal = 1})
 	end,
 
@@ -70,9 +70,29 @@ local function makeSpawnerEntiy(mob_name, model)
 end
 
 
+-- Check if 'height' is free from 'pos'
+local function checkSpace(pos, height)
+	for i = 0, height do
+		local n = core.get_node_or_nil({x = pos.x, y = pos.y + i, z = pos.z})
+		if not n or n.name ~= "air" then
+			return false
+		end
+	end
+	return true
+end
+
+
 -- Spawn mobs of spawner node
 local function spawnerSpawn(pos, spawner_def)
-	local mates = creatures.findTarget(nil, pos, spawner_def.range, "mate", spawner_def.mob_name, true) or {}
+	local mates = creatures.find_target(
+		pos, 
+		spawner_def.range, 
+		{
+			search_type = "mate", 
+			mob_name = spawner_def.mob_name, 
+			xray = true
+		}
+	)
 	if #mates >= spawner_def.number then
 		return false
 	end
@@ -104,18 +124,6 @@ local function spawnerSpawn(pos, spawner_def)
 			end
 		end
 	end
-end
-
-
--- Check if 'height' is free from 'pos'
-local function checkSpace(pos, height)
-	for i = 0, height do
-		local n = core.get_node_or_nil({x = pos.x, y = pos.y + i, z = pos.z})
-		if not n or n.name ~= "air" then
-			return false
-		end
-	end
-	return true
 end
 
 
@@ -167,7 +175,15 @@ function creatures.register_spawner(spawner_def)
 					spawner_timers[id] = os.time()
 				end
 				local time_from_last_call = os.time() - spawner_timers[id]
-				local mobs,player_near = creatures.findTarget(nil, pos, spawner_def.player_range, "player", nil, true, true)
+				local mobs,player_near = creatures.find_target(
+					pos, 
+					spawner_def.player_range, 
+					{
+						search_type = "player", 
+						xray = true,
+						no_count = true,
+					}
+				)
 				if player_near == true 
 					and time_from_last_call > 10 
 					and (math.random(1, 5) == 1 or (time_from_last_call ) > 27) 

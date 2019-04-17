@@ -87,6 +87,3 @@ creatures.find_target = function(pos, radius, search_def)
 	return mobs, player_near
 end
 
--- Alias
-creatures.findTarget = creatures.find_target
-

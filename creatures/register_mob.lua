@@ -117,7 +117,7 @@ function creatures.register_mob(mob_name, mob_def) -- returns true if sucessfull
 	end
 	
 	-- Register Entity
-	core.register_entity(":" .. mob_name, creatures.registered_mobs[mob_name].ent_def)
+	core.register_entity(mob_name, creatures.registered_mobs[mob_name].ent_def)
 	
 	return true
 end

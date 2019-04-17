@@ -115,6 +115,7 @@ end
 
 -- Register 'get_staticdata'
 creatures.register_get_staticdata = function(mob_name, func)
+
 	-- Check 'get_staticdata'
 	if creatures.registered_mobs[mob_name].get_staticdata_table == nil then
 		creatures.registered_mobs[mob_name].get_staticdata_table = {}

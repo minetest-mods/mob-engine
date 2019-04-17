@@ -88,14 +88,15 @@ for _,nodename in ipairs({
 	"doors:gate_pine_wood_closed",
 	"doors:gate_aspen_wood_closed"
 }) do
-
+	local groups = creatures.copy_tb(minetest.registered_items[nodename].groups)
+	groups.fence = 1
 	minetest.override_item(nodename, {
 		collision_box = {
 			type = "fixed",
 			fixed = {-1/2, -1/2, -1/4, 1/2, 3/2, 1/4}
-		}
+		},
+		groups = groups,
 	})
-
 end
 
 -- Adjust fence opened gate

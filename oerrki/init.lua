@@ -108,4 +108,4 @@ local def = {
 	},
 }
 
-creatures.register_mob("creatures:oerrki", def)
+creatures.register_mob("oerrki:oerrki", def)

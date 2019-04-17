@@ -125,3 +125,14 @@ creatures.check_free_pos = function(pos)
 	return false
 end
 
+-- Check if a node is wall/fence
+creatures.is_wall = function(pos)
+	local name = minetest.get_node(pos).name
+	if minetest.get_item_group(name, "wall") == 1
+		or minetest.get_item_group(name, "fence") == 1
+	then
+		return true
+	end
+	return false
+end
+

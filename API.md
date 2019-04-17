@@ -51,6 +51,7 @@ These values are reserved for the engine resources operation.
   * `mob_node`: for MOB path feature
   * `attack`: for attack interval
   * `follow_search`: for follow search sistem
+  * `hunger`: for nutrition feature
   
 ##### General
 * `mode`: current mode
@@ -72,6 +73,10 @@ These values are reserved for the engine resources operation.
 * `walk_around_time`: time of walk around mode
 * `fly_time`: time limit of fly
 * `is_died`: true if died
+* `satiated`: boolean for if MOB is nourished
+* `last_satiated_day`: last satiated day
+* `weight`: MOB weight in kilograms
+
 
 
 Registering a mob
@@ -82,7 +87,7 @@ When you register a MOB, the engine register and manage an entity in Minetest th
 * `creatures.register_mob(mob_name, {mob definition})`: Register a MOB
   * `mob_name` is a string of MOB ID
   * Returns `true` when sucessfull
-* `creatures.mob_def(mob_name)`: Get mob definitions
+* `creatures.mob_def(luaentity)`: Get MOB definitions
 
 Features
 --------
@@ -302,6 +307,14 @@ Definition tables
             
         }
         
+        hunger = { -- MOB hunger (this ignore lifetime) <optional>
+            days_interval = 5, -- Interval to eat each node
+            water = true, -- true if need drik water <optional>
+            food = { -- params for eat foods <optional>
+                nodes = {"farming:straw"} -- Table of nodes for eat
+            },
+        },
+        
         modes = {
             idle = {
                 chance = 0.5, 		--[[ number between 0.0 and 1.0 (!!NOTE: sum of all modes MUST be 1.0!!)
@@ -337,6 +350,7 @@ Definition tables
             rotation = 0.0, 				-- sets rotation offset when moving
             backface_culling = false, 			-- set true to enable backface culling
             vision_height = 0,                          -- MOB viewing height <optional> (default is 0)
+            weight = 45, 				-- Weight (in kilograms) used to calculate some physical aspects <optional> (default is 45)
             animations = { 				-- animation used if defined <optional>
             idle = {animation definition}, 		-- see #AnimationDef
             ... -- depends on modes (must correspond to be used);
@@ -475,11 +489,16 @@ Definition tables
 
 ### MOB Node definition (`register_mob_node`)
     {
-        name = <name>,        -- sound name as string; see Minetest documentation
-        gain = 1.0,           -- sound gain; see Minetest documentation
-        distance = <number>,  -- hear distance in blocks/nodes <optional>
-        time_min = <time>     -- minimum time in seconds between sounds (random only) <optional>
-        time_max = <time>     -- maximum time in seconds between sounds (random only) <optional>
+        mob_name = "creatures:sheep",    -- MOB name
+        search_mob = true,               -- search a MOB to the node
+        on_set_mob_node = <function>,    --[[ callback for on set MOB node
+                                              <function> is 'function(pos, luaentity) end'
+        on_reset_mob_node = <function>,  --[[ callback for on reset MOB node
+                                              <function> is 'function(pos) end'
+        on_save_mob = <function>,        --[[ callback for on save MOB
+                                              <function> is 'function(pos, luaentity) end'
+        on_load_mob = <function>,        --[[ callback for on load MOB
+                                              <function> is 'function(pos, luaentity) end'
     }
 
 

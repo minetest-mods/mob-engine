@@ -26,7 +26,11 @@ creatures.update_physic = function(self)
 	
 	-- Gravity
 	if self.physic.gravity == true then
-		self.object:setacceleration({x = 0, y = -15, z = 0})
+		local acell = -1 + (self.weight * -0.2)
+		if acell < -15 then
+			acell = -15
+		end
+		self.object:setacceleration({x = 0, y = acell, z = 0})
 	else
 		self.object:setacceleration({x = 0, y = 0, z = 0})
 	end
@@ -61,6 +65,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 	def.ent_def.collide_with_objects = def.model.collide_with_objects or true
 	def.ent_def.physical = true
 	def.ent_def.vision_height = def.model.vision_height or 0
+	def.ent_def.weight = def.model.weight or creatures.default_value.weight
 	
 	-- Register 'on_activate'
 	creatures.register_on_activate(mob_name, function(self, staticdata)

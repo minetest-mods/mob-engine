@@ -107,7 +107,7 @@ local def = {
 	}
 }
 
-creatures.register_mob("creatures:zombie", def)
+creatures.register_mob("zombie:zombie", def)
 
 
 -- Place spawners in dungeons
