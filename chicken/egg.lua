@@ -109,6 +109,8 @@ creatures.register_mode("chicken:dropegg", {
 	-- On step
 	start = function(self, dtime)
 		
+		if self.is_child then return end
+		
 		-- Last day when dropped egg
 		self["chicken:last_dropday"] = self["chicken:last_dropday"] or 0
 		

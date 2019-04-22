@@ -102,6 +102,7 @@ local def = {
 		["chicken:pick"] = {chance = 0.2, duration = 2},
 	},
 
+
 	model = {
 		mesh = "chicken.b3d",
 		textures = {"chicken.png"},
@@ -124,7 +125,21 @@ local def = {
 			["chicken:pick"] = {start = 88, stop = 134, speed = 50},
 		},
 	},
-
+	
+	child = {
+		name = "chicken:chicken_child",
+		days_to_grow = 3,
+		model = {
+			scale = {x = 0.7, y = 0.7}
+		},
+	},
+	
+	mating = {
+		child_mob = "chicken:chicken_child", 
+		interval = 3, 
+		spawn_type = "mob_node", 
+	},
+	
 	sounds = {
 		on_damage = {name = "chicken_chicken_hit", gain = 0.5, distance = 10},
 		on_death = {name = "chicken_chicken_hit", gain = 0.5, distance = 10},
