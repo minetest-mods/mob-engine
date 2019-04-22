@@ -52,6 +52,7 @@ These values are reserved for the engine resources operation.
   * `attack`: for attack interval
   * `follow_search`: for follow search sistem
   * `hunger`: for nutrition feature
+  * `mating`: for mating feature
   * `child_grow`: for grow child feature
   
 ##### General
@@ -349,6 +350,13 @@ Definition tables
             days_to_grow = 5, 		-- Days to grow
             on_grow = func,             -- Function `function(old_luaentity, new_luaentity) end`
         }
+        
+        mating = {
+            child_mob = "modname:mob", 	-- Name of child MOB
+            interval = 2, 		-- Interval (in days) between mating
+            spawn_type = "mob_node", 	--[[ Type for spawn child MOB
+                                                 "mob_node" spawn child in MOB node]]
+        },
         
         model = {
             mesh = "creatures_sheep.x", 		-- mesh name; see Minetest Documentation for supported filetypes

@@ -88,6 +88,7 @@ dofile(modpath .."/features/general/hit_bottom.lua")
 dofile(modpath .."/features/general/mob_node.lua")
 dofile(modpath .."/features/general/hunger.lua")
 dofile(modpath .."/features/general/child.lua")
+dofile(modpath .."/features/general/mating.lua")
 
 -- Mode
 dofile(modpath .."/features/mode/modes.lua")
