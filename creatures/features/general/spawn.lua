@@ -210,7 +210,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 		
 		-- Register Spawn
 		if creatures.register_spawn(spawn_def) ~= true then
-			throw_error("Couldn't register spawning for '" .. mob_name .. "'")
+			creatures.throw_error("Couldn't register spawning for '" .. mob_name .. "'")
 		end
 		
 	end
