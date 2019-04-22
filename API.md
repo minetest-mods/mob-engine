@@ -52,6 +52,7 @@ These values are reserved for the engine resources operation.
   * `attack`: for attack interval
   * `follow_search`: for follow search sistem
   * `hunger`: for nutrition feature
+  * `child_grow`: for grow child feature
   
 ##### General
 * `mode`: current mode
@@ -76,6 +77,7 @@ These values are reserved for the engine resources operation.
 * `satiated`: boolean for if MOB is nourished
 * `last_satiated_day`: last satiated day
 * `weight`: MOB weight in kilograms
+* `is_child`: is true when MOB is a child
 
 
 
@@ -341,6 +343,12 @@ Definition tables
                 nodes = <table> 	-- eatable nodes in format {<Itemname>, <Itemname>}; e.g. {"default:dirt_with_grass"}
             },
         },
+        
+        child = {
+            name = "mod:mobname", 	-- MOB name
+            days_to_grow = 5, 		-- Days to grow
+            on_grow = func,             -- Function `function(old_luaentity, new_luaentity) end`
+        }
         
         model = {
             mesh = "creatures_sheep.x", 		-- mesh name; see Minetest Documentation for supported filetypes
