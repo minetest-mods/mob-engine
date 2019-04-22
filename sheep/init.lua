@@ -145,7 +145,28 @@ local def = {
 		end
 		creatures.drop_items(self.object:getpos(), items)
 	end,
-
+	
+	child = {
+		name = "sheep:sheep_child",
+		days_to_grow = 5,
+		model = {
+			collisionbox_width = 0.7,
+			collisionbox_height = 1.1,
+			scale = {x = 0.65, y = 0.65}
+		},
+		
+		-- Callbacks
+		on_grow = function(self, new_self)
+			new_self.wool_color = self.wool_color
+		end,
+	},
+	
+	mating = {
+		child_mob = "sheep:sheep_child", 
+		interval = 5, 
+		spawn_type = "mob_node", 
+	},
+	
 	spawning = {
 		abm_nodes = {
 			spawn_on = {"default:dirt_with_grass"},
