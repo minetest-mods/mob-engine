@@ -321,8 +321,9 @@ Definition tables
         hunger = { -- MOB hunger (this ignore lifetime) <optional>
             days_interval = 5, -- Interval to eat each node
             water = true, -- true if need drik water <optional>
+            water_nodes = {"modname:node"}, -- Table of nodes for drink <optional> (default is {"group:water"})
             food = { -- params for eat foods <optional>
-                nodes = {"farming:straw"} -- Table of nodes for eat
+                nodes = {"modname:node"} -- Table of nodes for eat
             },
         },
         

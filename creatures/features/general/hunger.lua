@@ -98,7 +98,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 				
 				-- If need water
 				if mob_def.hunger.water then
-					local eat, node_pos = eat_nodes_near(self, {"group:water"}, def)
+					local eat, node_pos = eat_nodes_near(self, mob_def.hunger.water_nodes or {"group:water"}, def)
 					if eat == false then
 						if self.hunger_activated == false then
 							self.object:remove()
@@ -120,7 +120,12 @@ creatures.register_on_register_mob(function(mob_name, def)
 						end
 						return true
 					end
-					minetest.remove_node(node_pos)
+					-- Check feeder
+					if creatures.registered_feeder_nodes[minetest.get_node(node_pos).name] then
+						creatures.feeder.set_feeder_level(node_pos, -1)
+					else
+						minetest.remove_node(node_pos)
+					end
 				end
 				
 				days = days - mob_def.hunger.days_interval
