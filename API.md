@@ -226,6 +226,7 @@ Exists basically two formats for get or manipulate directions wich this feature:
   * if `yaw` is nil uses `luaentity.dir` direction
 
 ### Feeder
+Feeder nodes are used to accumulate food for nearby MOBs.
 
 #### Methods
 * `creatures.register_feeder_node(node_name, {feeder node definition}, [secondary])`: Register feeder node
@@ -476,18 +477,27 @@ Definition tables
 
 ### Feeder node definition (`register_feeder_node`)
     {
-        supply = {
-            ["farming:straw"] = 5,
+        supply = { -- Table of nodes that will supply the feeder (right click)
+            ["mymod:food"] = 1,
+            ["mymod:food_pack"] = 3,
         },
-        max_food = 100,
-        node_steps = {
+        max_food = 10, -- Limit of food level
+        node_steps = { -- Table of nodes to be used like different supply stages depending of food level <optional>
             {
                 food = 0,
-                name = "sheep:sheep_feeder",
+                name = "mymod:feeder_empty",
             },
             {
-                food = 1,
-                name = "sheep:sheep_feeder_1",
+                food = 3,
+                name = "mymod:feeder_stage_1",
+            },
+            {
+                food = 7,
+                name = "mymod:feeder_stage_2",
+            },
+            {
+                food = 10,
+                name = "mymod:feeder_full",
             },
         },
     }
