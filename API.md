@@ -225,6 +225,14 @@ Exists basically two formats for get or manipulate directions wich this feature:
 * `creatures.send_in_yaw(luaentity, speed, [yaw])`: Start MOB moviment in a yaw
   * if `yaw` is nil uses `luaentity.dir` direction
 
+### Feeder
+
+#### Methods
+* `creatures.register_feeder_node(node_name, {feeder node definition}, [secondary])`: Register feeder node
+* `creatures.set_feeder_level(pos, supply_or_item)`: Set feeder level
+  * `supply_or_item` can be a itemname for resupply feeder or a number to change feeder level
+  * Returns the number of how many levels have changed
+  * `secondary` to execute this method like secondary mode (for internal use) 
 
 Methods
 -------
@@ -280,7 +288,7 @@ Global tables
 * `creatures.registered_mobs`: Registered mob definitions, indexed by mob name
 * `creatures.registered_modes`: Registered mode definitions, indexed by mode name
 * `creatures.registered_mob_nodes`: Registered mob mode definitions, indexed by node name
-
+* `creatures.registered_feeder_nodes`: Registered feeder node definitions, indexed by node name
 
 Definition tables
 -----------------
@@ -464,6 +472,24 @@ Definition tables
         duration = 1  -- only supported in "death"-Animation, sets time the animation needs until mob is removed <optional>
     }
 
+
+### Feeder node definition (`register_feeder_node`)
+    {
+        supply = {
+            ["farming:straw"] = 5,
+        },
+        max_food = 100,
+        node_steps = {
+            {
+                food = 0,
+                name = "sheep:sheep_feeder",
+            },
+            {
+                food = 1,
+                name = "sheep:sheep_feeder_1",
+            },
+        },
+    }
 
 ### Sounds definition (`register_mob`)
     {
