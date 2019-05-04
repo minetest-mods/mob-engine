@@ -262,6 +262,12 @@ end
 -- Execute 'on_clear_objects'
 creatures.on_clear_objects = function(mob_name, self)
 	
+	-- Check mob_name
+	if not creatures.registered_mobs[mob_name] then
+		creatures.throw_error("'on_clear_objects' callback for MOB "..dump(mob_name).. " is nil")
+		return
+	end
+	
 	-- Check 'on_clear_objects'
 	if creatures.registered_mobs[mob_name].on_clear_objects_table == nil then
 		creatures.registered_mobs[mob_name].on_clear_objects_table = {}
@@ -279,7 +285,7 @@ minetest.clear_objects = function(...)
 	
 	-- Run registered 'on_clear_objects'
 	for obj_id,self in pairs(minetest.luaentities) do
-		if self.mob_name then
+		if self.mob_name and creatures.registered_on_register_mob[self.mob_name] then
 			creatures.on_clear_objects(self.mob_name, self)
 		end
 	end
