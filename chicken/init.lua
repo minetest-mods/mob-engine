@@ -150,16 +150,24 @@ local def = {
 	},
 
 	spawning = {
-		abm_nodes = {
-			spawn_on = {"default:dirt_with_grass", "default:dirt"},
+		ambience = {
+			
+			max_number = 4,
+			number = {min = 2, max = 4},
+			light = {min = 8, max = 15},
+			height_limit = {min = 1, max = 150},
+			
+			abm_nodes = {
+				spawn_on = {"default:dirt_with_grass"},
+			},
+			abm_interval = 55,
+			abm_chance = 7800,
+			
+			on_generated_nodes = {
+				spawn_on = {"default:dirt_with_grass"},
+			},
+			on_generated_chance = 35,
 		},
-		abm_interval = 55,
-		abm_chance = 7800,
-		max_number = 1,
-		number = 1,
-		light = {min = 8, max = 15},
-		height_limit = {min = 10, max = 150},
-
 		spawn_egg = {
 			description = "Chicken Spawn-Egg",
 		},

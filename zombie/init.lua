@@ -78,17 +78,42 @@ local def = {
 	},
 
 	spawning = {
-		abm_nodes = {
-			spawn_on = {"default:stone", "default:dirt_with_grass", "default:dirt",
-			"default:cobblestone", "default:mossycobble", "group:sand"},
+		ambience = {
+			abm_nodes = {
+				spawn_on = {
+					"default:stone", 
+					"default:dirt_with_grass", 
+					"default:dirt_with_dry_grass",
+					"default:dirt_with_coniferous_litter",
+					"default:dirt_with_rainforest_litter", 
+					"default:dirt_with_snow", "default:snow",
+					"default:dirt",
+					"default:cobblestone", 
+					"default:mossycobble", 
+					"group:sand"
+				},
+			},
+			abm_interval = 36,
+			abm_chance = 7600,
+			max_number = 1,
+			number = 2,
+			light = {min = 0, max = 8},
+			height_limit = {min = -200, max = 50},
+			
+			on_generated_nodes = {
+				spawn_on = {
+					"default:dirt_with_grass", 
+					"default:dirt_with_dry_grass",
+					"default:dirt_with_coniferous_litter",
+					"default:dirt_with_rainforest_litter", 
+					"default:dirt_with_snow", "default:snow",
+					"default:dirt",
+					"group:sand"
+				},
+			},
+			on_generated_chance = 55,
 		},
-		abm_interval = 36,
-		abm_chance = 7600,
-		max_number = 1,
-		number = 2,
-		light = {min = 0, max = 8},
-		height_limit = {min = -200, max = 50},
-
+		
 		spawn_egg = {
 			description = "Zombie Spawn-Egg",
 			texture = "egg_zombie.png",
@@ -118,7 +143,7 @@ local function place_spawner(tab)
 	local n = core.get_node_or_nil(pos)
 	if n and n.name ~= "air" then
 		pos.y = pos.y + 1
-		core.set_node(pos, {name = "creatures:zombie_spawner"})
+		core.set_node(pos, {name = "zombie:zombie_spawner"})
 	end
 end
 core.set_gen_notify("dungeon")

@@ -75,18 +75,28 @@ local def = {
 	},
 
 	spawning = {
-		abm_nodes = {
-			spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
-			"group:leaves", "group:sand"},
+		ambience = {
+			
+			abm_interval = 40,
+			abm_chance = 7300,
+			max_number = 1,
+			number = 1,
+			--time_range = {min = 18500, max = 4000},
+			--light = {min = 0, max = 8},
+			height_limit = {min = 1, max = 80},
+			
+			abm_nodes = {
+				spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
+				"group:leaves", "group:sand"},
+			},
+			
+			on_generated_nodes = {
+				spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
+				"group:leaves", "group:sand"},
+			},
+			--on_generated_chance = 55,
 		},
-		abm_interval = 40,
-		abm_chance = 7300,
-		max_number = 1,
-		number = 1,
-		time_range = {min = 18500, max = 4000},
-		light = {min = 0, max = 8},
-		height_limit = {min = 0, max = 80},
-
+		
 		spawn_egg = {
 			description = "Ghost Spawn-Egg",
 			texture = "egg_ghost.png",
