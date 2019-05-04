@@ -41,6 +41,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 		-- Check gravity
 		if self.can_fly then
 			self.physic.gravity = false
+			self.physic.default_gravity = false
 		end
 		
 		-- Update physic

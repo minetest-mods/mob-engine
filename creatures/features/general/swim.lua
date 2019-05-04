@@ -57,8 +57,8 @@ creatures.register_on_register_mob(function(mob_name, def)
 				me:setvelocity(vel)
 			end
 		else
-			self.physic.gravity = true
 			-- Update physic
+			creatures.reset_physic(self)
 			creatures.update_physic(self)
 		end
 		

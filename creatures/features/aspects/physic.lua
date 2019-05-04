@@ -36,6 +36,11 @@ creatures.update_physic = function(self)
 	end
 end
 
+-- Reset physic
+creatures.reset_physic = function(self)
+	self.physic.gravity = self.physic.default_gravity
+end
+
 -- Make collisionbox
 creatures.make_collisionbox = function(width, height)
 	if not width then return end
@@ -74,6 +79,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 		-- Physic parameters
 		self.physic = {}
 		self.physic.gravity = true
+		self.physic.default_gravity = true
 		
 		creatures.update_physic(self)
 	end)
