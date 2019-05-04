@@ -407,31 +407,58 @@ Definition tables
             search_type = "player", 	-- what enemy is being searched (see types at creatures.findTarget())
         }
         
-        spawning = {                  -- defines spawning in world <optional>
+        spawning = {                  --[[ Defines spawning in world <optional>
+        
+            ambience = { -- Table or table of tables for spawning definitions at ambience
             
-            abm_nodes = {
-                spawn_on = {<table>}, 	-- on what nodes mob can spawn <optional>
-                    ^ table  -- nodes and groups in table format; e.g. {"group:stone", "default:stone"}
-                neighbors = {}, 	-- what node should be neighbors to spawnnode <optional>
-                    ^ can be nil or table as above; "air" is forced always as neighbor
+                spawn_zone_width = <number>,-- width number (in blocks) of spawn zone without this MOB type
+            
+                max_number = <number>, 	-- maximum mobs of this kind per mapblock(16x16x16)
+        
+                number = <amount>,          -- how many mobs are spawned if found suitable spawn position
+                    ^ amount  -- number or table {min = <value>, max = <value>}
+                
+                time_range = <range>, 	-- time range in time of day format (0-24000) <optional>
+                    ^ range  -- table {min = <value>, max = <value>}
+            
+                light = <range>, 		-- min and max lightvalue at spawn position <optional>
+                    ^ range  -- table {min = <value>, max = <value>}
+                
+                height_limit = <range>, 	-- min and max height (world Y coordinate) <optional>
+                    ^ range  -- table {min = <value>, max = <value>}
+            
+                spawn_on = { 		--[[ on what nodes mob can spawn <optional>
+                                             ^ this search nodes near a selected place to spawn a group]]
+                    "modname:node1", 
+                    "modname:node2", 
+                },
+            
+                 abm_nodes = {
+                     spawn_on = { 		-- on what nodes mob can spawn <optional>
+                        "modname:node1", 
+                        "modname:node2", 
+                    }, 
+                    neighbors = { 		--[[ what node should be neighbors to spawnnode <optional>
+                                                 ^ can be nil or table as above; "air" is forced always as neighbor]]
+                        "modname:node3", 
+                        "modname:node4", 
+                    }, 
+                        
+                },
+                abm_interval = <interval>, 	-- time in seconds until Minetest tries to find a node with set specs
+                abm_chance = <chance>, 	-- chance is 1/<chance>
+                
+                on_generated_nodes = { 
+                    spawn_on = { 		-- on what nodes mob can spawn <optional>
+                        "modname:node1", 
+                        "modname:node2", 
+                    },
+                },
+                on_generated_chance = 100, 	--[[ chance in percent to spawn a MOB when it is possible <optional>
+                                                 ^ integer between 1 and 100
+                                                 ^ default is 100
             },
-            abm_interval = <interval>, 	-- time in seconds until Minetest tries to find a node with set specs
-            abm_chance = <chance>, 	-- chance is 1/<chance>
             
-            max_number = <number>, 	-- maximum mobs of this kind per mapblock(16x16x16)
-            
-            number = <amount>,          -- how many mobs are spawned if found suitable spawn position
-                ^ amount  -- number or table {min = <value>, max = <value>}
-                
-            time_range = <range>, 	-- time range in time of day format (0-24000) <optional>
-                ^ range  -- table {min = <value>, max = <value>}
-                
-            light = <range>, 		-- min and max lightvalue at spawn position <optional>
-                ^ range  -- table {min = <value>, max = <value>}
-                
-            height_limit = <range>, 	-- min and max height (world Y coordinate) <optional>
-                ^ range  -- table {min = <value>, max = <value>}
-
             spawn_egg = { 		-- is set a spawn_egg is added to creative inventory <optional>
                 description = <desc>, 	-- Item description as string
                 texture = <name>, 	-- texture name as string
