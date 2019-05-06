@@ -505,8 +505,14 @@ Definition tables
 ### Feeder node definition (`register_feeder_node`)
     {
         supply = { -- Table of nodes that will supply the feeder (right click)
-            ["mymod:food"] = 1,
-            ["mymod:food_pack"] = 3,
+            ["mymod:food"] = {
+                food = 1, -- food per item
+                count = 5, -- filled items at once.
+            },
+            ["mymod:food_pack"] = {
+                food = 5, -- food per item
+                count = 1, -- filled items at once.
+            },,
         },
         max_food = 10, -- Limit of food level
         node_steps = { -- Table of nodes to be used like different supply stages depending of food level <optional>

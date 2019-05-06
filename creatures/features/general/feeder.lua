@@ -52,8 +52,8 @@ local update_feeder_node = function(pos)
 end
 
 -- Set supply level
-creatures.set_feeder_level = function(pos, supply_or_item)
-	supply_or_item = supply_or_item or 0
+creatures.set_feeder_level = function(pos, supply_or_itemstack)
+	supply_or_itemstack = supply_or_itemstack or 0
 	
 	-- Definitions
 	local nodename = minetest.get_node(pos).name
@@ -64,11 +64,23 @@ creatures.set_feeder_level = function(pos, supply_or_item)
 	local food = meta:get_float("food") or 0
 	local old_food = food + 0
 	
-	local supply = supply_or_item
+	local supply = supply_or_itemstack
+	local take = 0
 	
-	if type(supply_or_item) == "string" then 
-		-- supply number	
-		supply = def.supply[supply_or_item] or 0
+	if type(supply_or_itemstack) ~= "number" then 
+		
+		local item_supply_def = def.supply[supply_or_itemstack:get_name()]
+		
+		local count = supply_or_itemstack:get_count()
+		take = item_supply_def.count or 1
+		
+		if count < take then
+			take = count
+		end
+		
+		-- supply number
+		supply = def.supply[supply_or_itemstack:get_name()].food or 1
+		supply = supply * take
 	end
 	
 	-- Save new food number at node
@@ -85,7 +97,7 @@ creatures.set_feeder_level = function(pos, supply_or_item)
 	meta:set_string("infotext", "Food: "..percent.."% ("..food..")")
 	update_feeder_node(pos)
 	
-	return (old_food - food)
+	return (old_food - food), take
 end
 
 -- Register node feeder
@@ -111,9 +123,11 @@ creatures.register_feeder_node = function(nodename, def, secondary)
 			
 			if itemstack and itemstack:get_name() and creatures.registered_feeder_nodes[nodename].supply[itemstack:get_name()] then
 				
-				if creatures.set_feeder_level(pos, itemstack:get_name()) ~= 0 then
+				local s, take = creatures.set_feeder_level(pos, itemstack)
 				
-					itemstack:take_item()
+				if s ~= 0 then
+				
+					itemstack:take_item(take)
 					
 				end
 				
