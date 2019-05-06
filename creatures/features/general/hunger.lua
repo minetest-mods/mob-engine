@@ -122,7 +122,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 					end
 					-- Check feeder
 					if creatures.registered_feeder_nodes[minetest.get_node(node_pos).name] then
-						creatures.feeder.set_feeder_level(node_pos, -1)
+						creatures.set_feeder_level(node_pos, -1)
 					else
 						minetest.remove_node(node_pos)
 					end
