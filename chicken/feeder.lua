@@ -64,7 +64,7 @@ core.register_craft({
 	output = 'chicken:chicken_feeder',
 	recipe = {
 		{'group:stick', '', 'group:stick'},
-		{'group:wood', 'farming:seed_wheat', 'group:wood'},
+		{'default:junglewood', 'farming:seed_wheat', 'default:junglewood'},
 		{'group:stick', '', 'group:stick'},
 	}
 })
