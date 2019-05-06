@@ -1,6 +1,6 @@
 --[[
 = Chicken for Creatures MOB-Engine (cme) =
-Copyright (C) 2017 Mob API Developers and Contributors
+Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
 init.lua
@@ -79,7 +79,23 @@ local def = {
 		has_kockback = true,
 		sneaky = true,
 	},
-
+	
+	hunger = {
+		days_interval = 5,
+		food = {
+			nodes = {
+				"chicken:chicken_feeder_1",
+				"chicken:chicken_feeder_2",
+				"chicken:chicken_feeder_3",
+				"chicken:chicken_feeder_4",
+				"chicken:chicken_feeder_5",
+				"chicken:chicken_feeder_6",
+				"chicken:chicken_feeder_7",
+				"chicken:chicken_feeder_8"
+			}
+		},
+	},
+	
 	modes = {
 		-- Standard Modes
 		idle = {chance = 0.25, duration = 2, update_yaw = 3},
@@ -184,3 +200,6 @@ creatures.register_mob("chicken:chicken", def)
 
 -- Nest
 dofile(core.get_modpath("chicken") .. "/nest.lua")
+
+-- Feeder
+dofile(core.get_modpath("chicken") .. "/feeder.lua")
