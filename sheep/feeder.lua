@@ -72,7 +72,7 @@ core.register_craft({
 	}
 })
 
--- Nest steps
+-- Feeder steps
 for n,data in ipairs({
 	{ -- 1
 		node_box_fixed = { -- Created with NodeBoxEditor
@@ -353,14 +353,16 @@ for n,data in ipairs({
 		sunlight_propagates = true,
 		buildable_to = true,
 		groups = {snappy = 3, attached_node = 1, flammable = 1, not_in_creative_inventory = 1},
-		sounds = default.node_sound_leaves_defaults(),
+		sounds = default.node_sound_wood_defaults()
 	})
 end
 
 -- Register feeder
 creatures.register_feeder_node("sheep:sheep_feeder", {
 	supply = {
-		["farming:straw"] = 5,
+		["farming:straw"] = {
+			food = 5,
+		},
 	},
 	max_food = 100,
 	node_steps = {
@@ -447,7 +449,7 @@ minetest.register_node("sheep:drinking_fountain", {
 	walkable = false,
 	buildable_to = true,
 	groups = {snappy = 3, attached_node = 1, flammable = 1},
-	sounds = default.node_sound_leaves_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 core.register_craft({
 	output = 'sheep:drinking_fountain',
