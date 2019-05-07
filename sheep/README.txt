@@ -7,10 +7,10 @@ Version: 2.1
 
 Adds sheep to Minetest (requires Creatures MOB-Engine).
 Sheep spawn only at day-time and are friendly and remain around 5 minutes in the world.
-There are four different wool colors: white, grey, brown and black.
-You can tame them by feading them with wheat. If there is grass they eat the grass
-and regrow wool that way. They will follow you if you have Wheat in your hand.
+There are four different wool colors: white, grey, brown and black. 
+They will follow you if you have Wheat in your hand.
 Sheep have 8 HP and drop 1-2 wool when punched or 1-3 wool when using shears.
+To keep a live chicken just put them close to a feeder and water.
 
 Sheers are crafted by using 2 steel ingots and one stick in following shape:
 
