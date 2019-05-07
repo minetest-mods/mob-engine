@@ -24,17 +24,16 @@ be misrepresented as being the original software.
 
 
 local function timer(step, entity)
-	if not entity then
+	if not entity or not entity.ref then
 		return
 	end
-
-	if entity.physical_state == false then
-		if entity.ref then
-			if math.random(1, 20) == 5 then
-				core.add_entity(entity.ref:getpos(), "chicken:chicken")
-			end
-			entity.ref:remove()
+	
+	local vel = entity.ref:getvelocity()
+	if vel ~= nil and vel.x == 0 and vel.y == 0 and vel.z == 0 then
+		if math.random(1, 20) == 5 then
+			core.add_entity(entity.ref:getpos(), "chicken:chicken")
 		end
+		entity.ref:remove()
 	else
 		core.after(step, timer, step, entity)
 	end
@@ -60,10 +59,10 @@ function throw_egg(player, strength)
 end
 
 core.register_craftitem("chicken:egg", {
-	description = "Egg",
+	description = "Chicken Egg",
 	inventory_image = "chicken_egg.png",
 	on_use = function(itemstack, user, pointed_thing)
-		if throw_egg(user, 12) then
+		if throw_egg(user, 22) then
 			itemstack:take_item()
 		end
 		return itemstack
