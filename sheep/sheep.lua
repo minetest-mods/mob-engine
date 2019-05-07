@@ -132,6 +132,7 @@ creatures.register_mob("sheep:sheep", {
 	},
 	
 	drops = function(self)
+		if self.is_child then return end
 		local items = {{"sheep:sheep_flesh"}}
 		if self.has_wool then
 			table.insert(items, {"wool:" .. self.wool_color, {min = 1, max = 2}})
@@ -238,6 +239,7 @@ creatures.register_mob("sheep:sheep", {
 	end,
 
 	on_rightclick = function(self, clicker)
+		if self.is_child then return end
 		local item = clicker:get_wielded_item()
 		if item then
 			local name = item:get_name()
