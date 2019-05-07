@@ -66,8 +66,8 @@ core.register_craft({
 	output = 'sheep:sheep_feeder',
 	replacements = {{"sheep:shepherd_wooden_stick", "sheep:shepherd_wooden_stick"}},
 	recipe = {
-		{'group:stick', 'group:wood', 'group:stick'},
-		{'group:wood', 'farming:wheat', 'group:wood'},
+		{'group:stick', 'default:acacia_wood', 'group:stick'},
+		{'default:acacia_wood', 'farming:wheat', 'default:acacia_wood'},
 		{'group:stick', 'sheep:shepherd_wooden_stick', 'group:stick'},
 	}
 })
