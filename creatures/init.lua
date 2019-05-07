@@ -90,6 +90,7 @@ dofile(modpath .."/features/general/feeder.lua")
 dofile(modpath .."/features/general/hunger.lua")
 dofile(modpath .."/features/general/child.lua")
 dofile(modpath .."/features/general/mating.lua")
+dofile(modpath .."/features/general/mob_item_tool.lua")
 
 -- Mode
 dofile(modpath .."/features/mode/modes.lua")

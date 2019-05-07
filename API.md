@@ -328,6 +328,16 @@ Definition tables
             },
         },
         
+        mob_item_tool = {
+            ["modname:item"] = { 	-- Item tool (not necessarily tool type)
+                on_use = func, 		--[[ Callback to when tool is used <optional>
+                                             ^ function(self, clicker, itemstack) end
+                                             ^ Return (#1) true or false to add wear and (#2) modified itemstack
+                wear = 100, 		-- Wear add after use (need be a item tool type) <optional>
+                disabled_in_child = false, -- If this item tool can not be used on child MOBs <optional> (default is false)
+            }
+        }
+        
         modes = {
             idle = {
                 chance = 0.5, 		--[[ number between 0.0 and 1.0 (!!NOTE: sum of all modes MUST be 1.0!!)
