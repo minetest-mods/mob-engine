@@ -11,12 +11,6 @@ Sheep have 8 HP and drop 1-2 wool when punched or 1-3 wool when using shears.
 To keep a live sheep just put them close to a feeder and water.
 Chicken nests can be used for the birth of the chickens.
 
-Sheers are crafted by using 2 steel ingots and one stick in following shape:
-
-  - 	ingot
-ingot 	stick
-
-
 License: 
 ~~~~~~~~
 Code:
