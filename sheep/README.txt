@@ -7,7 +7,7 @@ Adds sheep to Minetest (requires Creatures MOB-Engine).
 Sheep spawn only at day-time and are friendly and remain around 5 minutes in the world.
 There are four different wool colors: white, grey, brown and black. 
 They will follow you if you have Wheat in your hand.
-Sheep have 8 HP and drop 1-2 wool when punched or 1-3 wool when using shears.
+Sheep have 8 HP and drop 1-2 wool when using shears or 1 when death.
 To keep a live sheep just put them close to a feeder and water.
 Chicken nests can be used for the birth of the chickens.
 
@@ -25,7 +25,6 @@ Sounds:
 - sheep.1.ogg, confusion_music(https://freesound.org/people/confusion_music) CC-BY 3.0
 - sheep.2.ogg, confusion_music(https://freesound.org/people/confusion_music) CC-BY 3.0
 - sheep.3.ogg, Yuval(https://freesound.org/people/Yuval) CC-BY 3.0
-- shears.ogg, SmartWentCody(https://freesound.org/people/SmartWentCody) CC-BY 3.0
 
 
 Github:

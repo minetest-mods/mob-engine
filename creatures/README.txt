@@ -21,6 +21,8 @@ see "LICENSE.txt" for details.
 Media(textures and other media):
 (c) Copyright (2014-2016) BlockMen; CC-BY-SA 3.0
 
+- creatures_shears.ogg, SmartWentCody(https://freesound.org/people/SmartWentCody) CC-BY 3.0
+
 Github:
 ~~~~~~~
 https://github.com/BlockMen/cme/creatures
