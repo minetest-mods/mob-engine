@@ -238,20 +238,19 @@ creatures.register_mob("sheep:sheep", {
 		setColor(self)
 	end,
 
-	on_rightclick = function(self, clicker)
-		if self.is_child then return end
-		local item = clicker:get_wielded_item()
-		if item then
-			local name = item:get_name()
-			if name == "creatures:shears" and self.has_wool then
-				shear(self, math.random(1, 2), true)
-				item:add_wear(65535/100)
-			end
-			if not minetest.settings:get_bool("creative_mode") then
-				clicker:set_wielded_item(item)
-			end
-		end
-	end,
+	mob_item_tool = {
+		["creatures:shears"] = {
+			wear = 500,
+			disabled_in_child = true,
+			on_use = function(self, clicker)
+				if self.has_wool then
+					shear(self, math.random(1, 2), true)
+					return true
+				end
+				return false
+			end,
+		},
+	},
 
 	on_step = function(self, dtime)
 		self["sheep:regrow_timer"] = self["sheep:regrow_timer"] + dtime
