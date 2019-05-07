@@ -37,7 +37,7 @@ local function shear(self, drop_count, sound)
 		self.has_wool = false
 		local pos = self.object:getpos()
 		if sound then
-			core.sound_play("creatures_shears", {pos = pos, gain = 1, max_hear_distance = 10})
+			core.sound_play("shears", {pos = pos, gain = 1, max_hear_distance = 10})
 		end
 
 		setColor(self)

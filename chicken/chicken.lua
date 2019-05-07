@@ -119,11 +119,11 @@ creatures.register_mob("chicken:chicken", {
 	},
 	
 	sounds = {
-		on_damage = {name = "chicken_chicken_hit", gain = 0.5, distance = 10},
-		on_death = {name = "chicken_chicken_hit", gain = 0.5, distance = 10},
+		on_damage = {name = "chicken_hit", gain = 0.5, distance = 10},
+		on_death = {name = "chicken_hit", gain = 0.5, distance = 10},
 		swim = {name = "creatures_splash", gain = 1.0, distance = 10},
 		random = {
-			idle = {name = "chicken_chicken", gain = 0.9, distance = 12, time_min = 8, time_max = 50},
+			idle = {name = "chicken", gain = 0.9, distance = 12, time_min = 8, time_max = 50},
 		},
 	},
 

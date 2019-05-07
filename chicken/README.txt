@@ -8,22 +8,23 @@ Chicken spawn on dirt and grass blocks, have 5 HP and are friendly. When killed 
 they drop meat, which can be eaten or cooked and probably some feathers. Also they drop 
 randomly eggs in nests, which can be thrown to spawn new chicken or fried and eaten.
 To keep a live chicken just put them close to a feeder.
-
+Sheep beds can be used for the birth of the sheep.
 
 License:
 ~~~~~~~~
 Code:
+(c) Copyright 2019 Mob API Developers and Contributors 
 (c) Copyright 2015-2016 BlockMen; modified zlib-License
 see "LICENSE.txt" for details.
 
 Media(textures and meshes/models):
 Gamit(WTFPL):
-  creatures_egg.png
+  chicken_egg.png
 everything else:
 (c) Copyright (2014-2016) BlockMen; CC-BY-SA 3.0
 
 Sounds:
-- creatures_chicken*.ogg, dobroide(https://freesound.org/people/dobroide) CC BY 3.0
+- chicken*.ogg, dobroide(https://freesound.org/people/dobroide) CC BY 3.0
 
 Github:
 ~~~~~~~
