@@ -22,10 +22,10 @@ Media(textures and meshes/models):
 (c) Copyright (2014-2016) BlockMen; CC-BY-SA 3.0
 
 Sounds:
-- creatures_zombie.1.ogg, Under7dude(https://freesound.org/people/Under7dude) CC0
-- creatures_zombie.2.ogg, Under7dude(https://freesound.org/people/Under7dude) CC0
-- creatures_zombie.3.ogg, Under7dude(https://freesound.org/people/Under7dude) CC0
-- creatures_zombie_death.ogg, Under7dude(https://freesound.org/people/Under7dude) CC0
+- zombie.1.ogg, Under7dude(https://freesound.org/people/Under7dude) CC0
+- zombie.2.ogg, Under7dude(https://freesound.org/people/Under7dude) CC0
+- zombie.3.ogg, Under7dude(https://freesound.org/people/Under7dude) CC0
+- zombie_death.ogg, Under7dude(https://freesound.org/people/Under7dude) CC0
 
 Github:
 ~~~~~~~
