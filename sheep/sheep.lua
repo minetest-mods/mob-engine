@@ -82,6 +82,39 @@ creatures.register_mob("sheep:sheep", {
 		},
 	},
 	
+	randomize = {
+		values = {
+			{
+				textures = {"sheep.png^sheep_white.png"}, 
+				tags = {
+					wool_color = "white"
+				}
+			},
+			{
+				textures = {"sheep.png^sheep_black.png"}, 
+				tags = {
+					wool_color = "black"
+				}
+			},
+			{
+				textures = {"sheep.png^sheep_brown.png"}, 
+				tags = {
+					wool_color = "brown"
+				}
+			},
+			{
+				textures = {"sheep.png^sheep_grey.png"}, 
+				tags = {
+					wool_color = "grey"
+				}
+			},
+		},
+		on_randomize = function(self, values)
+			self.has_wool = true
+			setColor(self)
+		end,
+	},
+	
 	modes = {
 		idle = {chance = 0.5, duration = 10, random_yaw = 4},
 		walk = {
@@ -152,6 +185,7 @@ creatures.register_mob("sheep:sheep", {
 		-- Callbacks
 		on_grow = function(self, new_self)
 			new_self.wool_color = self.wool_color
+			setColor(new_self)
 		end,
 	},
 	
@@ -231,11 +265,6 @@ creatures.register_mob("sheep:sheep", {
 		-- Timer
 		self["sheep:regrow_timer"] = 0
 		
-		if not self.wool_color then
-			self.wool_color =  colors[math.random(1, #colors)]
-		end
-		-- update fur
-		setColor(self)
 	end,
 
 	mob_item_tool = {
