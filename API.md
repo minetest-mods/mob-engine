@@ -79,7 +79,7 @@ These values are reserved for the engine resources operation.
 * `last_satiated_day`: last satiated day
 * `weight`: MOB weight in kilograms
 * `is_child`: is true when MOB is a child
-
+* `randomized`: is true if is randomized
 
 
 Registering a mob
@@ -376,6 +376,20 @@ Definition tables
             interval = 2, 		-- Interval (in days) between mating
             spawn_type = "mob_node", 	--[[ Type for spawn child MOB
                                                  "mob_node" spawn child in MOB node]]
+        },
+        
+        randomize = {
+            values = {
+                {
+                    textures = {"texture.png"}, 
+                    tags = {
+                        tag_name = <value>,
+                    }
+                },
+                    {...},
+                },
+            on_randomize = func, 	--[[ Callback for when randomize 
+                                             ^ function(self, values) end ]]
         },
         
         model = {
