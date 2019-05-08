@@ -58,6 +58,14 @@ creatures.register_mob("chicken:chicken", {
 		},
 	},
 	
+	randomize = {
+		values = {
+			{textures = {"chicken_white.png"}},
+			{textures = {"chicken_black.png"}},
+			{textures = {"chicken_brown.png"}}
+		}
+	},
+	
 	modes = {
 		-- Standard Modes
 		idle = {chance = 0.25, duration = 2, update_yaw = 3},
@@ -83,7 +91,7 @@ creatures.register_mob("chicken:chicken", {
 
 	model = {
 		mesh = "chicken.b3d",
-		textures = {"chicken.png"},
+		textures = {"chicken_white.png"},
 		collisionbox_width = 0.5,
 		collisionbox_height = 0.7,
 		vision_height = 0.4,
