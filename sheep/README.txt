@@ -3,6 +3,8 @@ Sheep for Creatures MOB-Engine
 Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (c) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
+Version: 2.1
+
 Adds sheep to Minetest (requires Creatures MOB-Engine).
 Sheep spawn only at day-time and are friendly and remain around 5 minutes in the world.
 There are four different wool colors: white, grey, brown and black. 

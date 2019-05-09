@@ -3,6 +3,8 @@ Chicken for Creatures MOB-Engine
 Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (c) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
+Version: 2.2
+
 Adds chicken to Minetest (requires Creatures MOB-Engine).
 Chicken spawn on dirt and grass blocks, have 5 HP and are friendly. When killed or dying
 they drop meat, which can be eaten or cooked and probably some feathers. Also they drop 
