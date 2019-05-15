@@ -39,6 +39,8 @@ local function entity_table(mob_name, def)
 	if def.get_staticdata then creatures.register_get_staticdata(mob_name, def.get_staticdata) end
 	-- Register call custom 'on_activate'
 	if def.on_activate then creatures.register_on_activate(mob_name, def.on_activate) end
+	-- Register call custom 'on_deactivate'
+	if def.on_deactivate then creatures.register_on_deactivate(mob_name, def.on_deactivate) end
 	-- Register call custom 'on_punch'
 	if def.on_punch then creatures.register_on_punch(mob_name, def.on_punch) end
 	-- Register call custom 'on_rightclick'

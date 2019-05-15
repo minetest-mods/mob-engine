@@ -74,11 +74,6 @@ creatures.register_on_register_mob(function(mob_name, def)
 		}
 	end)
 	
-	-- Register 'on_grow'
-	if def.child.on_grow then
-		creatures.register_on_grow(def.child.name, def.child.on_grow)
-	end
-	
 	-- Register 'on_step'
 	creatures.register_on_step(def.child.name, function(self, dtime)
 		-- Timer update
@@ -133,4 +128,10 @@ creatures.on_grow = function(mob_name, self, new_self)
 			return r
 		end
 	end
+	
+	local def = creatures.mob_def(new_self)
+	if def.child.on_grow then
+		def.child.on_grow(self, new_self)
+	end
+	
 end

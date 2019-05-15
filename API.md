@@ -80,6 +80,7 @@ These values are reserved for the engine resources operation.
 * `weight`: MOB weight in kilograms
 * `is_child`: is true when MOB is a child
 * `randomized`: is true if is randomized
+* `activated`: for check if MOB is activated
 
 
 Registering a mob
@@ -114,6 +115,8 @@ For default, when a registered callback return (#1) `true` then prevent run next
     * This function need return staticdata in a table
 * `creatures.register_on_activate(mob_name, func)`: Register callback for when run default on_activate callback
   * `func` is a function `function(self, staticdata) end`
+* `creatures.register_on_deactivate(mob_name, func)`: Register callback for when deactivate MOB
+  * `func` is a function `function(self) end`
 * `creatures.register_on_clear_objects(mob_name, func)`: Register callback for when run minetest.clear_objects
   * `func` is a function `function(self) end`
 * `creatures.register_on_hitted(func)`: Register callback for when MOB is hitted
@@ -129,6 +132,7 @@ For default, when a registered callback return (#1) `true` then prevent run next
 * `creatures.on_rightclick(mob_name, self, clicker)`: Run default on_rightclick callback
 * `creatures.get_staticdata(mob_name, self)`: Run default get_staticdata callback
 * `creatures.on_activate(mob_name, self, staticdata)`: Run default on_activate callback
+* `creatures.on_deactivate(mob_name, self)`: Run on_deactivate callback
 * `creatures.on_clear_objects(mob_name, self)`: Run on_clear_objects callback
 * `creatures.on_hitted(self, puncher, time_from_last_punch, tool_capabilities, dir)`: Run on_hitted callback
 * `creatures.on_change_hp(self, hp)`: Run on_change_hp callback

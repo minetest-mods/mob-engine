@@ -45,6 +45,7 @@ dofile(modpath .."/fence_adjust.lua")
 -- MOB Registration
 dofile(modpath .."/register_mob.lua")
 
+dofile(modpath .."/methods/mod_storage.lua")
 dofile(modpath .."/methods/drop_items.lua")
 dofile(modpath .."/methods/find_target.lua")
 dofile(modpath .."/methods/kill_mob.lua")
@@ -72,6 +73,7 @@ dofile(modpath .."/features/basic/direction.lua")
 dofile(modpath .."/features/basic/fly.lua")
 
 -- General
+dofile(modpath .."/features/general/cleaning_cycles.lua")
 dofile(modpath .."/features/general/remove.lua")
 dofile(modpath .."/features/general/death_effects.lua")
 dofile(modpath .."/features/general/footstep_effects.lua")

@@ -21,41 +21,59 @@ be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
 
+-- Set random values
+local set_random_values = function(self)
+	local def = creatures.mob_def(self)
+	
+	-- Random texture
+	if self.randomized_value.textures then
+		self.object:set_properties({textures = self.randomized_value.textures})
+	end
+	
+	-- Random tags
+	if self.randomized_value.tags then
+		for index,v in pairs(self.randomized_value.tags) do
+			self[index] = v
+		end
+	end
+	
+	if def.randomize.on_randomize then
+		def.randomize.on_randomize(self, self.randomized_value)
+	end
+	
+	self.randomized = true
+end
+
 
 -- Register 'on_register_mob'
 creatures.register_on_register_mob(function(mob_name, def)
 	
 	if not def.randomize then return end
 	
-	-- Register 'on_activate'
-	creatures.register_on_activate(mob_name, function(self, staticdata)
-		if self.randomized == true then return end
-		
-		self.randomized_value = def.randomize.values[math.random(1, #def.randomize.values)]
-		
-		-- Random texture
-		if self.randomized_value.textures then
-			self.object:set_properties({textures = self.randomized_value.textures})
-		end
-		
-		-- Random tags
-		if self.randomized_value.tags then
-			for index,v in pairs(self.randomized_value.tags) do
-				self[index] = v
-			end
-		end
-		
-		if def.randomize.on_randomize then
-			def.randomize.on_randomize(self, self.randomized_value)
-		end
-		
-		self.randomized = true
+	-- Register 'get_staticdata'
+	creatures.register_get_staticdata(mob_name, function(self)
+		return {
+			randomized = self.randomized,
+			randomized_value = self.randomized_value,
+		}
 	end)
 	
-	-- Register 'on_grow'
+	-- Register 'on_activate'
+	creatures.register_on_activate(mob_name, function(self, staticdata)
+		if self.randomized ~= true then 
+			self.randomized_value = def.randomize.values[math.random(1, #def.randomize.values)]
+		end
+		
+		set_random_values(self)
+	end)
+	
+	-- If child
 	if def.child then
+		
+		-- Register 'on_grow'
 		creatures.register_on_grow(def.child.name, function(self, new_self) 
 			new_self.randomized = self.randomized
+			new_self.randomized_value = self.randomized_value
 			-- Adjust texture
 			self.object:set_properties({textures = self.randomized_value.textures})
 		end)

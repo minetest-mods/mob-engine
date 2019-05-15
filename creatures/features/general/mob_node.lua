@@ -21,6 +21,7 @@ be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
 
+local hash_tb = {}
 
 -- Check mob_node at pos
 local check_node = function(pos)
@@ -31,9 +32,24 @@ local check_node = function(pos)
 	return true
 end
 
+-- Save MOB
+local save_mob = function(self)
+	
+	-- Save in the mob node
+	local meta = minetest.get_meta(self.mob_node.pos)
+	meta:set_string("creatures:saved_mob", "true")
+	meta:set_float("creatures:last_cleaning_cycle", creatures.cleaning_cycle)
+	
+	-- Run callback
+	local def = creatures.get_mob_node_def(minetest.get_node(self.mob_node.pos).name)
+	if def.on_save_mob then
+		def.on_save_mob(self.mob_node.pos, self)
+	end
+	
+end
 
 -- Set mob in node
-local set_mob_node = function(pos, ent)
+local set_mob_node = function(pos, self)
 	if check_node(pos) == false then 
 		return 
 	end
@@ -41,10 +57,10 @@ local set_mob_node = function(pos, ent)
 	local meta = minetest.get_meta(pos)
 	
 	-- Hash link of occupation
-	local hashlink = tostring(ent.object)
+	local hashlink = tostring(self.object)
 	
-	ent.mob_node.hashlink = hashlink
-	ent.mob_node.pos = {
+	self.mob_node.hashlink = hashlink
+	self.mob_node.pos = {
 		x = creatures.int(pos.x),
 		y = creatures.int(pos.y),
 		z = creatures.int(pos.z)
@@ -52,10 +68,14 @@ local set_mob_node = function(pos, ent)
 	
 	meta:set_string("creatures:hashlink", hashlink)
 	
+	save_mob(self)
+	
+	hash_tb[hashlink] = self.object
+	
 	-- Run callback
 	local def = creatures.get_mob_node_def(minetest.get_node(pos).name)
 	if def.on_set_mob_node then
-		def.on_set_mob_node(pos, ent)
+		def.on_set_mob_node(pos, self)
 	end
 end
 
@@ -67,6 +87,7 @@ local reset_mob_node = function(pos)
 	local meta = minetest.get_meta(pos)
 	
 	meta:set_string("creatures:hashlink", "")
+	meta:set_string("creatures:saved_mob", "")
 	
 	-- Run callback
 	local def = creatures.get_mob_node_def(minetest.get_node(pos).name)
@@ -96,74 +117,29 @@ local node_way = function(self, pos, origin)
 end
 
 
--- Save MOB
-local save_mob = function(self)
-	
-	-- Check mob node
-	if self.mob_node.pos then
-		
-		-- Check way
-		if node_way(self) == false then return end
-		
-		-- Check distance
-		local pos = self.mob_node.pos
-		local d, v = creatures.get_dist_p1top2(self.object:get_pos(), pos)
-		if v.x < 5 or v.y < 5 or v.z < 5 then
-			-- Save in the mob node
-			local meta = minetest.get_meta(pos)
-			meta:set_string("creatures:saved_mob", "true")
-			meta:set_string("creatures:saved_mob_pos", minetest.serialize(self.object:get_pos()))
-			
-			-- Run callback
-			local def = creatures.get_mob_node_def(minetest.get_node(pos).name)
-			if def.on_save_mob then
-				def.on_save_mob(pos, self)
-			end
-			
-			-- Mark to remove object when load
-			self.remove = true
-			self.object:remove()
-		end
-	end
-	
-end
-
-
 -- Load MOB
 local load_mob = function(pos)
 	local meta = minetest.get_meta(pos)
+	meta:set_float("creatures:last_cleaning_cycle", creatures.cleaning_cycle)
+	
 	-- MOB node definitions
 	local def = creatures.get_mob_node_def(minetest.get_node(pos).name)
 	
 	-- Spawn MOB
 	local obj = core.add_entity(pos, def.mob_name)
-	local ent = obj:get_luaentity()
-	
-	-- Move to last pos
-	if meta:get_string("creatures:saved_mob_pos") ~= "" then
-		local p = minetest.deserialize(meta:get_string("creatures:saved_mob_pos"))
-		
-		if node_way(ent, p) == true then
-			obj:set_pos(p)
-		end
-	end
+	local self = obj:get_luaentity()
 	
 	-- Setup MOB
-	ent.mob_node.pos = creatures.copy_tb(pos)
-	ent.mob_node.hashlink = meta:get_string("creatures:hashlink")
+	self.mob_node.pos = creatures.copy_tb(pos)
+	self.mob_node.hashlink = meta:get_string("creatures:hashlink")
+	
+	hash_tb[self.mob_node.hashlink] = self.object
 	
 	-- Run callback
 	local def = creatures.get_mob_node_def(minetest.get_node(pos).name)
 	if def.on_load_mob then
-		def.on_load_mob(pos, ent)
+		def.on_load_mob(pos, self)
 	end
-	
-	-- Clear node metadata
-	meta:set_string("creatures:saved_mob_pos", "")
-	meta:set_string("creatures:saved_mob", "")
-	
-	return
-	
 end
 
 -- Check vacant mob node
@@ -186,13 +162,25 @@ creatures.check_mob_node = function(self)
 	local meta = minetest.get_meta(self.mob_node.pos)
 	
 	if meta:get_string("creatures:hashlink") == self.mob_node.hashlink then
-		
 		return true
 	end
 	
 	return false
 end
-check_mob_node = creatures.check_mob_node
+local check_mob_node = creatures.check_mob_node
+
+-- Check cleaning cycle
+local check_cleaning_cycle = function(pos)
+	local meta = minetest.get_meta(pos)
+	local last_cycle = meta:get_float("creatures:last_cleaning_cycle") or 0
+	
+	if meta:get_string("creatures:saved_mob") == "true" 
+		and last_cycle ~= creatures.cleaning_cycle 
+	then
+		load_mob(pos)
+	end
+end
+
 
 -- Register mob node
 creatures.registered_mob_nodes = {}
@@ -213,26 +201,16 @@ creatures.register_mob_node = function(mob_node, def)
 			-- Check hash
 			if hashlink == "" then return end
 			
-			-- If inside
-			if meta:get_string("creatures:saved_mob") == "true" then
-				load_mob(pos)
-				return
-			end
+			-- If removed all objects
+			check_cleaning_cycle(pos)
 			
-			-- Search MOBs
-			for _,obj in ipairs(creatures.find_target(
-				pos, 
-				4, 
-				{
-					search_type = "mate",
-					mob_name = mob_name,
-					xray = true,
-				})
-			) do
-				-- Check if is the same hashlink
-				if obj:get_luaentity().mob_node.hashlink == hashlink then
-					return
-				end
+			-- Check
+			if hash_tb[hashlink] 
+				and hash_tb[hashlink]:get_pos()
+				and creatures.get_dist_p1top2(pos, hash_tb[hashlink]:get_pos()) < 10 
+				and node_way(self, pos, hash_tb[hashlink]:get_pos()) == true
+			then
+				return
 			end
 			
 			-- Not found
@@ -254,19 +232,14 @@ creatures.register_mob_node = function(mob_node, def)
 			-- Check hash
 			if hashlink == "" then return end
 			
-			-- If inside
-			if meta:get_string("creatures:saved_mob") == "true" then
-				load_mob(pos)
-			end
+			-- If removed all objects
+			check_cleaning_cycle(pos)
 		end,
 	})
 	
 	
 	-- Register 'get_staticdata'
 	creatures.register_get_staticdata(mob_name, function(self)
-		
-		save_mob(self)
-		
 		return {
 			mob_node = self.mob_node
 		}
@@ -278,6 +251,10 @@ creatures.register_mob_node = function(mob_node, def)
 	creatures.register_on_activate(mob_name, function(self, staticdata)
 		
 		self.mob_node = self.mob_node or {}
+		
+		if self.mob_node and self.mob_node.hashlink then
+			hash_tb[self.mob_node.hashlink] = self.object
+		end
 		
 		self.timers.mob_node = 0
 		
@@ -301,7 +278,7 @@ creatures.register_mob_node = function(mob_node, def)
 			if self.mob_node.pos then
 				
 				-- Check mob node
-				if creatures.check_mob_node(self) == true then
+				if check_mob_node(self) == true then
 					
 					-- Reset lifetime
 					self.lifetimer = 0
@@ -330,14 +307,6 @@ creatures.register_mob_node = function(mob_node, def)
 				end
 			end 
 			
-		end
-	end)
-	
-	-- Register 'on_clear_objects'
-	creatures.register_on_clear_objects(mob_name, function(self) 
-		
-		if check_mob_node(self) == true then
-			save_mob(self)
 		end
 	end)
 	

@@ -126,7 +126,12 @@ end
 
 -- Execute 'get_staticdata'
 creatures.get_staticdata = function(mob_name, self)
-
+	
+	if self.activated == true then
+		creatures.on_deactivate(mob_name, self)
+	end
+	self.activated = true
+	
 	-- Check 'get_staticdata'
 	if creatures.registered_mobs[mob_name].get_staticdata_table == nil then
 		creatures.registered_mobs[mob_name].get_staticdata_table = {}
@@ -186,6 +191,35 @@ creatures.on_activate = function(mob_name, self, staticdata)
 		end
 	end
 end
+
+
+-- Register 'on_deactivate'
+creatures.register_on_deactivate = function(mob_name, func)
+	-- Check 'on_deactivate'
+	if creatures.registered_mobs[mob_name].on_deactivate_table == nil then
+		creatures.registered_mobs[mob_name].on_deactivate_table = {}
+	end
+	
+	table.insert(creatures.registered_mobs[mob_name].on_deactivate_table, func)
+end
+
+-- Execute 'on_deactivate'
+creatures.on_deactivate = function(mob_name, self)
+	
+	-- Check 'on_deactivate'
+	if creatures.registered_mobs[mob_name].on_deactivate_table == nil then
+		creatures.registered_mobs[mob_name].on_deactivate_table = {}
+	end
+	
+	-- Run registered 'on_deactivate'
+	for _,f in ipairs(creatures.registered_mobs[mob_name].on_deactivate_table) do
+		local r = f(self)
+		if r == true then
+			return r
+		end
+	end
+end
+
 
 -- Register 'on_clear_objects'
 creatures.register_on_clear_objects = function(mob_name, func)
@@ -285,7 +319,7 @@ minetest.clear_objects = function(...)
 	
 	-- Run registered 'on_clear_objects'
 	for obj_id,self in pairs(minetest.luaentities) do
-		if self.mob_name and creatures.registered_on_register_mob[self.mob_name] then
+		if self.mob_name and creatures.registered_mobs[self.mob_name] then
 			creatures.on_clear_objects(self.mob_name, self)
 		end
 	end
