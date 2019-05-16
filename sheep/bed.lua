@@ -61,19 +61,8 @@ creatures.register_mob_node("sheep:bed", {
 	search_mob = true,
 	
 	-- On load MOB
-	on_save_mob = function(pos, self)
-		local meta = minetest.get_meta(pos)
-		
-		meta:set_string("wool_color", self.wool_color)
-		meta:set_string("has_wool", minetest.serialize(self.has_wool))
-	end,
-	
-	-- On load MOB
 	on_load_mob = function(pos, self)
-		local meta = minetest.get_meta(pos)
-		
-		self.wool_color = meta:get_string("wool_color")
-		self.has_wool = minetest.deserialize(meta:get_string("has_wool"))
+		self.has_wool = true
 		sheep.set_color(self)
 	end,
 	

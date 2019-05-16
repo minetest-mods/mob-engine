@@ -40,6 +40,11 @@ local save_mob = function(self)
 	meta:set_string("creatures:saved_mob", "true")
 	meta:set_float("creatures:last_cleaning_cycle", creatures.cleaning_cycle)
 	
+	-- Save tags
+	for _,tag_name in ipairs(creatures.mob_node_save_tags) do
+		meta:set_string("creatures:saved_mob_node_tag_"..tag_name, minetest.serialize(self[tag_name]))
+	end
+	
 	-- Run callback
 	local def = creatures.get_mob_node_def(minetest.get_node(self.mob_node.pos).name)
 	if def.on_save_mob then
@@ -130,10 +135,19 @@ local load_mob = function(pos)
 	local self = obj:get_luaentity()
 	
 	-- Setup MOB
+	self.mob_node = {}
 	self.mob_node.pos = creatures.copy_tb(pos)
 	self.mob_node.hashlink = meta:get_string("creatures:hashlink")
 	
 	hash_tb[self.mob_node.hashlink] = self.object
+	
+	-- Load tags
+	for _,tag_name in ipairs(creatures.mob_node_save_tags) do
+		self[tag_name] = minetest.deserialize(meta:get_string("creatures:saved_mob_node_tag_"..tag_name))
+	end
+	
+	-- Update randomized values
+	creatures.set_random_values(self, true)
 	
 	-- Run callback
 	local def = creatures.get_mob_node_def(minetest.get_node(pos).name)
