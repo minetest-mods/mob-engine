@@ -81,8 +81,8 @@ local def = {
 			abm_chance = 7300,
 			max_number = 1,
 			number = 1,
-			--time_range = {min = 18500, max = 4000},
-			--light = {min = 0, max = 8},
+			time_range = {min = 18500, max = 4000},
+			light = {min = 0, max = 8},
 			height_limit = {min = 1, max = 80},
 			
 			abm_nodes = {
@@ -94,7 +94,7 @@ local def = {
 				spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
 				"group:leaves", "group:sand"},
 			},
-			--on_generated_chance = 55,
+			on_generated_chance = 55,
 		},
 		
 		spawn_egg = {
