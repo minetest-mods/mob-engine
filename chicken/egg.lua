@@ -1,6 +1,6 @@
 --[[
 = Chicken for Creatures MOB-Engine (cme) =
-Copyright (C) 2017 Mob API Developers and Contributors
+Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
 egg.lua
@@ -30,7 +30,7 @@ local function timer(step, entity)
 	
 	local vel = entity.ref:getvelocity()
 	if vel ~= nil and vel.x == 0 and vel.y == 0 and vel.z == 0 then
-		if math.random(1, 20) == 5 then
+		if math.random(1, 100) <= 5 then
 			core.add_entity(entity.ref:getpos(), "chicken:chicken")
 		end
 		entity.ref:remove()
