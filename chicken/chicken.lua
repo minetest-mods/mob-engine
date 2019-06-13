@@ -27,6 +27,14 @@ creatures.register_idle_mode("chicken:idle2")
 -- Pick
 creatures.register_idle_mode("chicken:pick")
 
+-- Dirt for spawn env
+minetest.register_node("chicken:dirt_spawn_env", {
+	description = "Dirt",
+	tiles = {"default_dirt.png"},
+	groups = {crumbly = 3, soil = 1},
+	sounds = default.node_sound_dirt_defaults(),
+	drop = "default:dirt",
+})
 
 creatures.register_mob("chicken:chicken", {
 
@@ -96,7 +104,7 @@ creatures.register_mob("chicken:chicken", {
 		collisionbox_height = 0.7,
 		vision_height = 0.4,
 		weight = 15,
-		rotation = 180.0,
+		rotation = 90.0,
 		collide_with_objects = false,
 		animations = {
 			-- Standard Animations
@@ -137,22 +145,43 @@ creatures.register_mob("chicken:chicken", {
 
 	spawning = {
 		ambience = {
-			
-			max_number = 4,
-			number = {min = 2, max = 4},
-			light = {min = 8, max = 15},
-			height_limit = {min = 1, max = 150},
-			
-			abm_nodes = {
-				spawn_on = {"default:dirt_with_grass"},
+			{
+				spawn_type = "environment",
+				
+				max_number = 6,
+				number = {min = 2, max = 3},
+				light = {min = 8, max = 15},
+				height_limit = {min = 1, max = 150},
+				
+				-- Spawn environment
+				spawn_env_chance = 2,
+				spawn_env_seed = 7254,
+				spawn_env_biomes = {
+					-- Grassland
+					"grassland", 
+					"grassland_ocean",
+					"floatland_grassland",
+					"snowy_grassland",
+					"snowy_grassland_ocean",
+					-- Coniferous forest
+					"deciduous_forest",
+					"deciduous_forest_ocean",
+				},
+				spawn_env_nodes = {
+					emergent = "chicken:emergent_spawn_env",
+					spawn_on = {"default:dirt_with_grass"},
+					place_on = {"default:dirt_with_grass"},
+					set_on = {"chicken:dirt_spawn_env"},
+					neighbors = {"default:dirt_with_grass"},
+					build = {
+						place = {
+							nodename = "chicken:dirt_spawn_env",
+							nodes = {"default:dirt_with_grass"},
+							y_diff = -1,
+						},
+					},
+				},
 			},
-			abm_interval = 55,
-			abm_chance = 7800,
-			
-			on_generated_nodes = {
-				spawn_on = {"default:dirt_with_grass"},
-			},
-			on_generated_chance = 35,
 		},
 		spawn_egg = {
 			description = "Chicken Spawn-Egg",

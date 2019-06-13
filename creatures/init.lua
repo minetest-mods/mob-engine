@@ -94,6 +94,7 @@ dofile(modpath .."/features/general/child.lua")
 dofile(modpath .."/features/general/mating.lua")
 dofile(modpath .."/features/general/mob_item_tool.lua")
 dofile(modpath .."/features/general/randomize.lua")
+dofile(modpath .."/features/general/spawn_env.lua")
 
 -- Mode
 dofile(modpath .."/features/mode/modes.lua")

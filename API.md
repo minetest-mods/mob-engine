@@ -115,7 +115,7 @@ For default, when a registered callback return (#1) `true` then prevent run next
     * This function need return staticdata in a table
 * `creatures.register_on_activate(mob_name, func)`: Register callback for when run default on_activate callback
   * `func` is a function `function(self, staticdata) end`
-* `creatures.register_on_deactivate(mob_name, func)`: Register callback for when deactivate MOB
+* `creatures.register_on_deactivate(mob_name, func)`: Register callback for when deactivate MOB (not operational)
   * `func` is a function `function(self) end`
 * `creatures.register_on_clear_objects(mob_name, func)`: Register callback for when run minetest.clear_objects
   * `func` is a function `function(self) end`
@@ -437,8 +437,16 @@ Definition tables
         
         spawning = {                  --[[ Defines spawning in world <optional>
         
-            ambience = { -- Table or table of tables for spawning definitions at ambience
-            
+            ambience = { -- SpawnAmbienceDef or Table of different SpawnAmbienceDefs for spawning definitions at ambiences
+                
+                -- Spawn type 
+                spawn_type = "spawn_type", --[[ Spawn type
+                                                - "environment" for spawn environment 
+                                                - "generated" for spawn on generated map
+                                                - "abm" for spawn ABM ]]
+                
+                -- General definitions
+                
                 spawn_zone_width = <number>,-- width number (in blocks) of spawn zone without this MOB type
             
                 max_number = <number>, 	-- maximum mobs of this kind per mapblock(16x16x16)
@@ -460,9 +468,15 @@ Definition tables
                     "modname:node1", 
                     "modname:node2", 
                 },
-            
-                 abm_nodes = {
-                     spawn_on = { 		-- on what nodes mob can spawn <optional>
+                
+                -- 'ABM' feature
+                --[[
+                    Low-frequent randomized spawning.
+                ]]
+                abm_interval = <interval>, 	-- time in seconds until Minetest tries to find a node with set specs
+                abm_chance = <chance>, 		-- chance is 1/<chance>
+                abm_nodes = {
+                    spawn_on = { 		-- on what nodes mob can spawn <optional>
                         "modname:node1", 
                         "modname:node2", 
                     }, 
@@ -471,20 +485,55 @@ Definition tables
                         "modname:node3", 
                         "modname:node4", 
                     }, 
-                        
+                    nodes_near = { 		-- what node should be near to spawnnode <optional>
+                        "modname:node5", 
+                        "modname:node6",
+                    },
+                    nodes_near_radius = 8, 	-- Distance for nodes near <optional> (default is 8)
                 },
-                abm_interval = <interval>, 	-- time in seconds until Minetest tries to find a node with set specs
-                abm_chance = <chance>, 	-- chance is 1/<chance>
                 
+                -- 'On generate' feature
+                --[[
+                    Spawn MOBs when the world is generated.
+                ]]
+                on_generated_chance = 100, 	--[[ chance in percent to spawn a MOB when it is possible <optional>
+                                                 ^ integer between 1 and 100
+                                                 ^ default is 100
                 on_generated_nodes = { 
+                    get_under_air = true, 	-- for get only nodes under air <optional>
                     spawn_on = { 		-- on what nodes mob can spawn <optional>
                         "modname:node1", 
                         "modname:node2", 
                     },
+                    nodes_near = { 		-- what node should be near to spawnnode <optional>
+                        "modname:node5", 
+                        "modname:node6",
+                    },
+                    nodes_near_radius = 8, 	-- Distance for nodes near <optional> (default is 8)
                 },
-                on_generated_chance = 100, 	--[[ chance in percent to spawn a MOB when it is possible <optional>
-                                                 ^ integer between 1 and 100
-                                                 ^ default is 100
+                
+                -- 'Spawn environment' feature
+                --[[
+                    Keeps groups of wild MOBs even on server cleanup objects. (It is necessary to place a node in the landscape to keeps the MOB)
+                    Randomness works according to the world seed.
+                ]]
+                spawn_env_chance = 1, 				-- Chance to spawn, work like a multiplier (1.0 is a common chance)
+                spawn_env_seed = 5313, 				-- Seed to generate MOBs
+                spawn_env_biomes = {"biome", "another_biome"}, 	-- Biomes to set environment
+                spawn_env_nodes = {
+                    emergent = "mymod:emergent_spawn_env", 	-- Node name to register a emergent node to setup a spawn
+                    spawn_on = {"default:dirt_with_grass"}, 	-- on what nodes mob can spawn at spawn environment <optional>
+                    place_on = {"default:dirt_with_grass"}, 	-- nodes at biome
+                    set_on = {"default:dirt_with_grass"}, 	-- nodes to set spawn environment
+                    neighbors = {"air"}, 			-- what node should be neighbors to spawn environment node <optional>
+                    build = { 					-- build some thing at spawn environment
+                        place = { 				-- place a node
+                            nodename = "mymod:fake_dirt", 		-- place this node
+                            nodes = {"default:dirt_with_grass"},-- find this nodes to place 
+                            y_diff = -1, 			-- difference in y <optional> (default is 0)
+                        },
+                    },
+                },
             },
             
             spawn_egg = { 		-- is set a spawn_egg is added to creative inventory <optional>

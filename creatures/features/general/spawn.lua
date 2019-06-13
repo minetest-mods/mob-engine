@@ -67,6 +67,7 @@ local add_entity = function(p, mob_name)
 	local obj = core.add_entity(p, mob_name)
 	local self = obj:get_luaentity()
 	creatures.set_dir(self, creatures.get_random_dir())
+	return self
 end
 
 -- Spawn a mob group
@@ -99,37 +100,33 @@ end
 creatures.registered_spawn = {}
 
 -- Spawn a MOB at ambience
-local spawn_at_ambience = function(pos, label, nodes)
+creatures.spawn_at_ambience = function(pos, label, params)
 	local def = creatures.registered_spawn[label]
+	params = params or {}
 	
 	-- Check Time of Day
 	local tod = core.get_timeofday() * 24000
-	if def.time_range then
-		local wanted_res = false
+	if params.ignore_time_range ~= true and def.time_range then
 		local range = table.copy(def.time_range)
-		if range.min > range.max and range.min <= tod then
-			wanted_res = true
+		if range.min > range.max then
+			if tod < range.max then
+				tod = tod + 24000
+			end
+			range.max = range.max + 24000
 		end
-		if inRange(range, tod) == wanted_res then
+		if inRange(range, tod) == false then
 			return
 		end
 	end
 	
 	-- Check height limits
-	if def.height_limit and not inRange(def.height_limit, pos.y) then
-		return
-	end
-
-	-- Check light
-	pos.y = pos.y + 1
-	local llvl = core.get_node_light(pos)
-	if def.light and not inRange(def.light, llvl) then
+	if params.ignore_height_limits ~= true and def.height_limit and not inRange(def.height_limit, pos.y) then
 		return
 	end
 	
-	-- Check creature count 
+	-- Check creature count in zone
 	local max
-	do
+	if def.max_number and def.spawn_zone_width then
 		local mates_num = #creatures.find_target(
 			pos, 
 			def.spawn_zone_width, 
@@ -151,7 +148,9 @@ local spawn_at_ambience = function(pos, label, nodes)
 	height_min = math.ceil(height_min)
 
 	local number = 0
-	if type(def.number) == "table" then
+	if params.only_one == true then
+		number = 1
+	elseif type(def.number) == "table" then
 		number = math.random(def.number.min, def.number.max)
 	else
 		number = def.number or 1
@@ -162,40 +161,84 @@ local spawn_at_ambience = function(pos, label, nodes)
 	end
 	
 	if number > 1 then
-		groupSpawn(pos, {name = def.mob_name, size = height_min}, number, nodes or def.spawn_on, 5)
+		groupSpawn(pos, {name = def.mob_name, size = height_min}, number, params.spawn_on or def.spawn_on, 5)
 	else
-		-- space check
-		if not checkSpace(pos, height_min) then
-			return
+		
+		local spawn_pos = table.copy(pos)
+		
+		
+		if params.spawn_on then
+			spawn_pos = nil
+			local nds = minetest.find_nodes_in_area(
+				{x = pos.x - 5, y = pos.y - 5, z = pos.z - 5},
+				{x = pos.x + 5, y = pos.y + 5, z = pos.z + 5}, 
+				params.spawn_on or def.spawn_on
+			)
+			while #nds > 0 do
+				local p = creatures.get_random_from_table(nds, true)
+				p.y = p.y + 1
+				-- space check
+				if checkSpace(p, height_min) then
+					-- Check light
+					local llvl = core.get_node_light(p)
+					if def.light and not inRange(def.light, llvl) then
+						p = nil
+					else
+						spawn_pos = table.copy(p)
+						break
+					end
+				else
+					p = nil
+				end
+			end
+			if spawn_pos == nil then
+				return
+			end 
+		else
+			spawn_pos.y = spawn_pos.y + 1
+			-- Check light
+			local llvl = core.get_node_light(spawn_pos)
+			if params.ignore_light ~= true and def.light and not inRange(def.light, llvl) then
+				return
+			end
+			-- space check
+			if not checkSpace(spawn_pos, height_min) then
+				return
+			end
 		end
-		add_entity(pos, def.mob_name)
+		
+		return add_entity(spawn_pos, def.mob_name)
 	end
 end
+local spawn_at_ambience = creatures.spawn_at_ambience
 
 -- Register Spawn
 function creatures.register_spawn(label, def)
-	if not def or not def.abm_nodes then
+	if not def then
 		creatures.throw_error("No valid definition for given.")
 		return false
 	end
 	
-	-- ABM
-	def.abm_interval = def.abm_interval or 44
-	def.abm_chance = def.abm_chance or 7000
-	def.abm_nodes.neighbors = def.abm_nodes.neighbors or {}
-	table.insert(def.abm_nodes.neighbors, "air")
-	
 	-- On generated
-	def.on_generated_chance = def.on_generated_chance or 100
-	def.on_generated_nodes = def.on_generated_nodes or {"default:dirt_with_grass"}
+	if def.on_generated_nodes then
+		def.on_generated_chance = def.on_generated_chance or 100
+		def.on_generated_nodes = def.on_generated_nodes or {"default:dirt_with_grass"}
+	end
 	
 	-- Ambience
 	def.spawn_zone_width = def.spawn_zone_width or 16
 	
 	creatures.registered_spawn[label] = table.copy(def)
 	
-	-- Register ABM
-	if def.abm_nodes then
+	-- 'ABM' spawn type
+	if def.spawn_type == "abm" then
+	
+		def.abm_interval = def.abm_interval or 44
+		def.abm_chance = def.abm_chance or 7000
+		def.abm_nodes.neighbors = def.abm_nodes.neighbors or {}
+		table.insert(def.abm_nodes.neighbors, "air")
+		
+		-- Register ABM
 		minetest.register_abm({
 			nodenames = def.abm_nodes.spawn_on,
 			neighbors = def.abm_nodes.neighbors,
@@ -209,13 +252,27 @@ function creatures.register_spawn(label, def)
 					return
 				end
 				
-				spawn_at_ambience(pos, label, def.abm_nodes.spawn_on)
+				-- Check node near
+				if def.abm_nodes.nodes_near 
+				and minetest.find_node_near(
+					pos, 
+					def.abm_nodes.nodes_near_radius or creatures.default_value.nodes_near_radius, 
+					def.abm_nodes.nodes_near
+				) == nil then
+					return
+				end
+				
+				spawn_at_ambience(pos, label, {spawn_on = def.abm_nodes.spawn_on})
 			end,
 		})
-	end
 	
-	-- On generated map
-	if def.on_generated_nodes then
+	-- 'Environment' spawn type
+	elseif def.spawn_type == "environment" then
+		creatures.register_spawn_env(label)
+		
+	-- 'On generated map' spawn type
+	elseif def.spawn_type == "generated" then
+	
 		minetest.register_on_generated(function(minp, maxp, blockseed)
 			
 			-- Check height limits
@@ -233,19 +290,37 @@ function creatures.register_spawn(label, def)
 				z = math.random(minp.z, maxp.z)
 			}
 			local radius = (maxp.x - minp.x)
-			local pos = minetest.find_node_near(random_pos, radius, def.spawn_on or def.on_generated_nodes.spawn_on)
+			local pos 
+			if def.on_generated_nodes.get_under_air == true then
+				local nds = minetest.find_nodes_in_area_under_air(minp, maxp, def.spawn_on or def.on_generated_nodes.spawn_on)
+				if table.maxn(nds) > 0 then
+					pos = nds[math.random(1, table.maxn(nds))]
+				end
+			else
+				pos = minetest.find_node_near(random_pos, radius, def.spawn_on or def.on_generated_nodes.spawn_on)
+			end
 			if pos 
 				and math.random(1, 100) <= def.on_generated_chance -- Calcule chance
 			then
 				
-				-- Adjusto to a node under air 
+				-- Adjust to a node under air 
 				local n = 0
 				while n <= 5 and minetest.get_node({x=pos.x,y=pos.y+1,z=pos.z}).name ~= "air" do
 					pos.y = pos.y + 1
 					n = n + 1
 				end
 				
-				spawn_at_ambience(pos, label, def.spawn_on or def.on_generated_nodes.spawn_on)
+				-- Check node near
+				if def.on_generated_nodes.nodes_near 
+				and minetest.find_node_near(
+					pos, 
+					def.on_generated_nodes.nodes_near_radius or creatures.default_value.nodes_near_radius, 
+					def.on_generated_nodes.nodes_near
+				) == nil then
+					return
+				end
+				
+				spawn_at_ambience(pos, label, {spawn_on = def.spawn_on or def.on_generated_nodes.spawn_on})
 			end
 		end)
 	end
