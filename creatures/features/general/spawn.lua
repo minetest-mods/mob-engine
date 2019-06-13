@@ -235,8 +235,6 @@ function creatures.register_spawn(label, def)
 	
 		def.abm_interval = def.abm_interval or 44
 		def.abm_chance = def.abm_chance or 7000
-		def.abm_nodes.neighbors = def.abm_nodes.neighbors or {}
-		table.insert(def.abm_nodes.neighbors, "air")
 		
 		-- Register ABM
 		minetest.register_abm({
@@ -253,11 +251,11 @@ function creatures.register_spawn(label, def)
 				end
 				
 				-- Check node near
-				if def.abm_nodes.nodes_near 
+				if def.abm_nodes.near 
 				and minetest.find_node_near(
 					pos, 
-					def.abm_nodes.nodes_near_radius or creatures.default_value.nodes_near_radius, 
-					def.abm_nodes.nodes_near
+					def.abm_nodes.near_radius or creatures.default_value.nodes_near_radius, 
+					def.abm_nodes.near
 				) == nil then
 					return
 				end
@@ -311,11 +309,11 @@ function creatures.register_spawn(label, def)
 				end
 				
 				-- Check node near
-				if def.on_generated_nodes.nodes_near 
+				if def.on_generated_nodes.near 
 				and minetest.find_node_near(
 					pos, 
-					def.on_generated_nodes.nodes_near_radius or creatures.default_value.nodes_near_radius, 
-					def.on_generated_nodes.nodes_near
+					def.on_generated_nodes.near_radius or creatures.default_value.nodes_near_radius, 
+					def.on_generated_nodes.near
 				) == nil then
 					return
 				end
