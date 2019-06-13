@@ -252,6 +252,15 @@ creatures.register_mob_node = function(mob_node, def)
 	})
 	
 	
+	-- Register 'on_die_mob' callback
+	creatures.register_on_die_mob(mob_name, function(self, reason)
+		if self.mob_node and self.mob_node.pos then
+			reset_mob_node(self.mob_node.pos)
+			self.mob_node = nil
+		end
+	end)
+	
+	
 	-- Register 'get_staticdata'
 	creatures.register_get_staticdata(mob_name, function(self)
 		return {

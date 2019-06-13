@@ -76,6 +76,7 @@ local def = {
 
 	spawning = {
 		ambience = {
+			spawn_type = "abm",
 			
 			abm_interval = 40,
 			abm_chance = 7300,

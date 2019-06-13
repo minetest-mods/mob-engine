@@ -58,6 +58,7 @@ minetest.register_node("sheep:sheep_feeder", {
 		"default_acacia_wood.png" -- Front
 	},
 	sunlight_propagates = true,
+	buildable_to = true,
 	groups = {snappy = 3, attached_node = 1, flammable = 1},
 	sounds = default.node_sound_leaves_defaults(),
 })
@@ -350,6 +351,7 @@ for n,data in ipairs({
 		},
 		tiles = data.tiles or {"farming_straw.png^[transformR90"},
 		sunlight_propagates = true,
+		buildable_to = true,
 		groups = {snappy = 3, attached_node = 1, flammable = 1, not_in_creative_inventory = 1},
 		sounds = default.node_sound_wood_defaults()
 	})

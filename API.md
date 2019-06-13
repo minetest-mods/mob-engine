@@ -115,7 +115,7 @@ For default, when a registered callback return (#1) `true` then prevent run next
     * This function need return staticdata in a table
 * `creatures.register_on_activate(mob_name, func)`: Register callback for when run default on_activate callback
   * `func` is a function `function(self, staticdata) end`
-* `creatures.register_on_deactivate(mob_name, func)`: Register callback for when deactivate MOB
+* `creatures.register_on_deactivate(mob_name, func)`: Register callback for when deactivate MOB (not operational)
   * `func` is a function `function(self) end`
 * `creatures.register_on_clear_objects(mob_name, func)`: Register callback for when run minetest.clear_objects
   * `func` is a function `function(self) end`
@@ -437,54 +437,10 @@ Definition tables
         
         spawning = {                  --[[ Defines spawning in world <optional>
         
-            ambience = { -- Table or table of tables for spawning definitions at ambience
-            
-                spawn_zone_width = <number>,-- width number (in blocks) of spawn zone without this MOB type
-            
-                max_number = <number>, 	-- maximum mobs of this kind per mapblock(16x16x16)
-        
-                number = <amount>,          -- how many mobs are spawned if found suitable spawn position
-                    ^ amount  -- number or table {min = <value>, max = <value>}
-                
-                time_range = <range>, 	-- time range in time of day format (0-24000) <optional>
-                    ^ range  -- table {min = <value>, max = <value>}
-            
-                light = <range>, 		-- min and max lightvalue at spawn position <optional>
-                    ^ range  -- table {min = <value>, max = <value>}
-                
-                height_limit = <range>, 	-- min and max height (world Y coordinate) <optional>
-                    ^ range  -- table {min = <value>, max = <value>}
-            
-                spawn_on = { 		--[[ on what nodes mob can spawn <optional>
-                                             ^ this search nodes near a selected place to spawn a group]]
-                    "modname:node1", 
-                    "modname:node2", 
-                },
-            
-                 abm_nodes = {
-                     spawn_on = { 		-- on what nodes mob can spawn <optional>
-                        "modname:node1", 
-                        "modname:node2", 
-                    }, 
-                    neighbors = { 		--[[ what node should be neighbors to spawnnode <optional>
-                                                 ^ can be nil or table as above; "air" is forced always as neighbor]]
-                        "modname:node3", 
-                        "modname:node4", 
-                    }, 
-                        
-                },
-                abm_interval = <interval>, 	-- time in seconds until Minetest tries to find a node with set specs
-                abm_chance = <chance>, 	-- chance is 1/<chance>
-                
-                on_generated_nodes = { 
-                    spawn_on = { 		-- on what nodes mob can spawn <optional>
-                        "modname:node1", 
-                        "modname:node2", 
-                    },
-                },
-                on_generated_chance = 100, 	--[[ chance in percent to spawn a MOB when it is possible <optional>
-                                                 ^ integer between 1 and 100
-                                                 ^ default is 100
+            ambience = { -- Ambience spawn definitions
+                {ambience spawn definition}, -- Case 1 or generic case
+                {ambience spawn definition}, -- Case 2
+                ...
             },
             
             spawn_egg = { 		-- is set a spawn_egg is added to creative inventory <optional>
@@ -529,6 +485,107 @@ Definition tables
         duration = 1  -- only supported in "death"-Animation, sets time the animation needs until mob is removed <optional>
     }
 
+
+### Interval definition 
+    {
+        min = <value>, 	-- Minimum value
+        max = <value> 	-- Maximum value
+    }
+
+
+### Ambience spawn definition (`register_mob`)
+    {
+        -- General definitions
+        
+        spawn_type = "spawn_type", 	--[[ Spawn type
+                                             ^ "environment" for spawn environment 
+                                             ^ "generated" for spawn on generated map
+                                             ^ "abm" for spawn by ABM ]]
+        
+        spawn_zone_width = <number>,	-- width number (in blocks) of spawn zone without this MOB type
+    
+        max_number = <number>, 		-- maximum mobs of this kind per mapblock (16x16x16)
+        
+        number = 1,          		-- how many mobs are spawned if found suitable spawn position (can be {interval})
+        
+        time_range = {interval}, 	-- time range in time of day format (0-24000) <optional>
+    
+        light = {interval}, 		-- min and max lightvalue (0-15) at spawn position <optional>
+        
+        height_limit = {interval}, 	-- min and max height (world Y coordinate) <optional>
+    
+        spawn_on = {"itemstring",...}, 	--[[ on what nodes mob can spawn <optional>
+                                             ^ this search nodes near a selected place to spawn a group ]]
+        
+        -- 'ABM' feature
+        --[[
+            Low-frequent randomized spawning.
+        ]]
+        abm_interval = <interval>, 	-- time in seconds until Minetest tries to find a node with set specs
+        abm_chance = <chance>, 		-- chance is 1/<chance>
+        abm_nodes = {
+            
+            -- Spawning
+            spawn_on = {"itemstring",...}, 	-- on what nodes mob can spawn <optional>
+            neighbors = {"itemstring",...}, 	-- what node should be neighbors to spawnnode <optional>
+            
+            -- Filter: nearby nodes
+            near = {"itemstring",...}, 		-- what node should be near to spawnnode <optional>
+            near_radius = 8, 			-- distance for nodes near <optional>
+        },
+        
+        -- 'On generate' feature
+        --[[
+            Spawn MOBs when the world is generated.
+        ]]
+        on_generated_chance = 100, 	-- chance in percent (1-100) to spawn a MOB when it is possible <optional>
+        on_generated_nodes = { 
+            
+            -- Spawning
+            spawn_on = {"itemstring",...}, 	-- on what nodes mob can spawn <optional>
+            
+            -- Filter: under air nodes
+            get_under_air = true, 		-- for get only nodes under air <optional>
+            
+            -- Filter: nearby nodes
+            near = {"itemstring",...}, 		-- what node should be near to spawnnode <optional>
+            near_radius = 8, 			-- distance for nodes near <optional>
+        },
+        
+        -- 'Spawn environment' feature
+        --[[
+            IMPORTANT: This is a temporary feature created only to respawn MOB after the indiscriminate 
+            cleaning of objects in the world (which is a current problem in Minetest). 
+            This feature will no longer be necessary for the future.
+            Respawn wild MOBs even on server cleanup objects. 
+            It is necessary use a node in the environment to respawn a wild MOB.
+            Randomness works according to the world seed.
+        ]]
+        spawn_env_chance = 1, 			-- Chance to spawn, work like a multiplier (1.0 is a common chance)
+        spawn_env_seed = 5313, 			-- Seed to generate this MOB
+        spawn_env_biomes = {"biome",...}, 	-- Biomes to set environment
+        spawn_env_nodes = {
+            
+            -- Spawning
+            spawn_on = {"itemstring",...}, 	-- on what nodes mob can spawn at spawn environment <optional>
+            
+            -- Setting up environment
+            emergent = "itemstring", 		-- node name to register a emergent node to setup a spawn
+            build = { 				-- build some thing at spawn environment
+                place = { 				-- place a node by each MOB
+                    nodename = "itemstring", 	-- place this node
+                    nodes = {"itemstring",...}, -- searched nodes to place a new
+                    y_diff = 0, 		-- difference in y <optional>
+                },
+            },
+            place_on = {"itemstring",...}, 	-- nodes at biome
+            
+            -- Nodes at spawn environment
+            set_on = {"itemstring",...}, 	-- nodes at environment to setup a spawn environment node
+            neighbors = {"itemstring",...}, 	-- what node should be neighbors to spawn environment node <optional>
+            
+        },
+    }
 
 ### Feeder node definition (`register_feeder_node`)
     {

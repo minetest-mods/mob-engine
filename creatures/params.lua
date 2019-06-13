@@ -49,4 +49,7 @@ creatures.default_value.weight = 45
 -- Save tags in mob node
 creatures.mob_node_save_tags = {}
 
+-- Distance for nodes near on spawning
+creatures.default_value.nodes_near_radius = 8
+
 

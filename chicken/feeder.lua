@@ -348,6 +348,7 @@ for n,data in ipairs({
 			"(chicken_feeder_seeds.png^(default_junglewood.png^chicken_feeder_layer_side.png^[makealpha:76,255,0))" -- Front
 		},
 		sunlight_propagates = true,
+		buildable_to = true,
 		groups = {snappy = 3, attached_node = 1, flammable = 1, not_in_creative_inventory = 1},
 		sounds = default.node_sound_wood_defaults()
 	})

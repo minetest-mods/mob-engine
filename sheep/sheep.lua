@@ -45,6 +45,14 @@ local function shear(self, drop_count, sound)
 	end
 end
 
+-- Dirt for spawn env
+minetest.register_node("sheep:dirt_spawn_env", {
+	description = "Dirt",
+	tiles = {"default_dirt.png"},
+	groups = {crumbly = 3, soil = 1},
+	sounds = default.node_sound_dirt_defaults(),
+	drop = "default:dirt",
+})
 
 -- white, grey, brown, black (see wool colors as reference)
 local colors = {"white", "grey", "brown", "black"}
@@ -200,38 +208,61 @@ creatures.register_mob("sheep:sheep", {
 		ambience = {
 			
 			{
-				max_number = 4,
+				spawn_type = "environment",
+				
+				max_number = 6,
 				spawn_zone_width = 100,
-				number = {min = 2, max = 4},
+				number = {min = 2, max = 3},
 				time_range = {min = 5100, max = 18300},
 				light = {min = 10, max = 15},
-				height_limit = {min = 1, max = 100},
+				height_limit = {min = 0, max = 150},
 				
-				spawn_on = {
-					"default:dirt_with_grass", 
-					"default:dirt_with_snow", "default:snow", "default:snowblock",
+				-- Spawn environment
+				spawn_env_chance = 2,
+				spawn_env_seed = 2359,
+				spawn_env_biomes = {
+					-- Grassland
+					"grassland", 
+					"grassland_ocean",
+					"floatland_grassland",
+					"snowy_grassland",
+					"snowy_grassland_ocean",
+					-- Coniferous forest
+					"deciduous_forest",
+					"deciduous_forest_ocean",
+					-- Tundra
+					"tundra_highland",
+					"tundra",
+					-- Taiga
+					"taiga",
+					"taiga_ocean",
+					-- Ice
+					"icesheet",
+					"icesheet_ocean",
 				},
-				
-				abm_nodes = {
+				spawn_env_nodes = {
+					emergent = "sheep:emergent_spawn_env",
 					spawn_on = {
 						"default:dirt_with_grass", 
-						"default:dirt_with_snow", "default:snow", "default:snowblock",
+						"default:dirt_with_snow", "default:snowblock", "default:snow",
 					},
-					neighbors = {
-						"group:dirt"
-					},
-				},
-				abm_interval = 55,
-				abm_chance = 7800,
-				
-				on_generated_nodes = {
-					spawn_on = {
+					place_on = {
 						"default:dirt_with_grass", 
-						"default:dirt_with_snow", "default:snowblock",
+						"default:dirt_with_snow", "default:snowblock", "default:snow",
+					},
+					set_on = {"sheep:dirt_spawn_env"},
+					build = {
+						place = {
+							nodename = "sheep:dirt_spawn_env",
+							nodes = {
+								"default:dirt_with_grass", 
+								"default:dirt_with_snow", "default:snowblock", "default:snow",
+							},
+							y_diff = -2,
+						},
 					},
 				},
-				on_generated_chance = 35,
-			}
+			},
 		},
 		
 		spawn_egg = {

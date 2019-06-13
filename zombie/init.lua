@@ -79,39 +79,52 @@ local def = {
 
 	spawning = {
 		ambience = {
-			abm_nodes = {
-				spawn_on = {
-					"default:stone", 
-					"default:dirt_with_grass", 
-					"default:dirt_with_dry_grass",
-					"default:dirt_with_coniferous_litter",
-					"default:dirt_with_rainforest_litter", 
-					"default:dirt_with_snow", "default:snow",
-					"default:dirt",
-					"default:cobblestone", 
-					"default:mossycobble", 
-					"group:sand"
+			{
+				spawn_type = "abm",
+				
+				max_number = 1,
+				number = 2,
+				light = {min = 0, max = 8},
+				height_limit = {min = -200, max = 50},
+				
+				abm_nodes = {
+					spawn_on = {
+						"default:stone", 
+						"default:dirt_with_grass", 
+						"default:dirt_with_dry_grass",
+						"default:dirt_with_coniferous_litter",
+						"default:dirt_with_rainforest_litter", 
+						"default:dirt_with_snow", "default:snow",
+						"default:dirt",
+						"default:cobblestone", 
+						"default:mossycobble", 
+						"group:sand"
+					},
 				},
+				abm_interval = 36,
+				abm_chance = 7600,
 			},
-			abm_interval = 36,
-			abm_chance = 7600,
-			max_number = 1,
-			number = 2,
-			light = {min = 0, max = 8},
-			height_limit = {min = -200, max = 50},
-			
-			on_generated_nodes = {
-				spawn_on = {
-					"default:dirt_with_grass", 
-					"default:dirt_with_dry_grass",
-					"default:dirt_with_coniferous_litter",
-					"default:dirt_with_rainforest_litter", 
-					"default:dirt_with_snow", "default:snow",
-					"default:dirt",
-					"group:sand"
+			{
+				spawn_type = "generated",
+				
+				max_number = 1,
+				number = 2,
+				light = {min = 0, max = 8},
+				height_limit = {min = -200, max = 50},
+				
+				on_generated_chance = 55,
+				on_generated_nodes = {
+					spawn_on = {
+						"default:dirt_with_grass", 
+						"default:dirt_with_dry_grass",
+						"default:dirt_with_coniferous_litter",
+						"default:dirt_with_rainforest_litter", 
+						"default:dirt_with_snow", "default:snow",
+						"default:dirt",
+						"group:sand"
+					},
 				},
-			},
-			on_generated_chance = 55,
+			}
 		},
 		
 		spawn_egg = {

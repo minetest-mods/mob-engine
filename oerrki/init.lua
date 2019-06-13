@@ -83,16 +83,19 @@ local def = {
 
 	spawning = {
 		ambience = {
-			abm_nodes = {
-				spawn_on = {"default:dirt_with_grass", "default:dirt", "default:stone"},
-			},
-			abm_interval = 55,
-			abm_chance = 7800,
+			spawn_type = "abm",
+			
 			max_number = 1,
 			number = {min = 1, max = 3},
 			time_range = {min = 18500, max = 5100},
 			light = {min = 0, max = 8},
 			height_limit = {min = -200, max = 50},
+			
+			abm_nodes = {
+				spawn_on = {"default:dirt_with_grass", "default:dirt", "default:stone"},
+			},
+			abm_interval = 55,
+			abm_chance = 7800,
 		},
 		
 		spawn_egg = {
