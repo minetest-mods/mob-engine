@@ -392,7 +392,7 @@ Definition tables
                 },
                     {...},
                 },
-            on_randomize = func, 	--[[ Callback for when randomize 
+            on_randomize = func, 	--[[ Callback for when randomize (use this only for apply randomized values)
                                              ^ function(self, values) end ]]
         },
         
