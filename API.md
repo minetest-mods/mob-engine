@@ -376,7 +376,7 @@ Definition tables
         }
         
         mating = {
-            child_mob = "modname:mob", 	-- Name of child MOB
+            child_mob = "modname:mob", 	-- Name of child MOB, if nil then defined child MOB is used <optional>
             interval = 2, 		-- Interval (in days) between mating
             spawn_type = "mob_node", 	--[[ Type for spawn child MOB
                                                  "mob_node" spawn child in MOB node]]

@@ -50,6 +50,11 @@ creatures.register_on_register_mob(function(mob_name, def)
 	
 	if not def.mating then return end
 	
+	-- Check MOB child name
+	if def.mating.child_mob == nil then
+		def.mating.child_mob = def.child.name
+	end
+	
 	-- Register 'get_staticdata'
 	creatures.register_get_staticdata(mob_name, function(self)
 		
