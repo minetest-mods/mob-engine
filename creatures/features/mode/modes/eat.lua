@@ -53,7 +53,7 @@ creatures.register_mode("eat", {
 			end
 
 			if not eat_node then
-				current_mode = ""
+				self.mode = ""
 				return
 			else
 				self.eat_node = eat_node
@@ -82,7 +82,7 @@ creatures.register_mode("eat", {
 		end
 		self.eat_node = nil
 		
-		self.mode = current_mode
+		
 	end,
 })
 
