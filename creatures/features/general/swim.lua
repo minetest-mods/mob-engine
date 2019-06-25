@@ -74,7 +74,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 			self.timers.swim = 0
 			
 			-- Check if in water
-			if self.last_node.name == "default:water_source" then
+			if self.last_node and self.last_node.name == "default:water_source" then
 				self.in_water = true
 			else
 				self.in_water = false
