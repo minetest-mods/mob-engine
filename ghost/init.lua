@@ -46,7 +46,7 @@ local def = {
 		collisionbox_width = 0.6,
 		collisionbox_height = 1.3,
 		vision_height = 1.1,
-		rotation = 0.0,
+		rotation = -90.0,
 		animations = {
 			idle = {start = 0, stop = 80, speed = 15},
 			fly = {start = 102, stop = 122, speed = 12},
