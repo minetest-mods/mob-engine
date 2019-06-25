@@ -76,26 +76,70 @@ local def = {
 
 	spawning = {
 		ambience = {
-			spawn_type = "abm",
-			
-			abm_interval = 40,
-			abm_chance = 7300,
-			max_number = 1,
-			number = 1,
-			time_range = {min = 18500, max = 4000},
-			light = {min = 0, max = 8},
-			height_limit = {min = 1, max = 80},
-			
-			abm_nodes = {
-				spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
-				"group:leaves", "group:sand"},
+			-- Surface
+			{
+				spawn_type = "abm",
+				
+				abm_interval = 40,
+				abm_chance = 7300,
+				max_number = 1,
+				number = 1,
+				time_range = {min = 18500, max = 4000},
+				light = {min = 0, max = 8},
+				height_limit = {min = 1, max = 80},
+				
+				abm_nodes = {
+					spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
+					"group:leaves", "group:sand"},
+				},
 			},
-			
-			on_generated_nodes = {
-				spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
-				"group:leaves", "group:sand"},
+			{
+				spawn_type = "generated",
+				
+				abm_interval = 40,
+				abm_chance = 7300,
+				max_number = 1,
+				number = 1,
+				time_range = {min = 18500, max = 4000},
+				light = {min = 0, max = 8},
+				height_limit = {min = 1, max = 80},
+				
+				on_generated_chance = 60,
+				on_generated_nodes = {
+					spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
+					"group:leaves", "group:sand"},
+				},
 			},
-			on_generated_chance = 55,
+			-- Deep
+			{
+				spawn_type = "abm",
+				
+				abm_interval = 40,
+				abm_chance = 7300,
+				max_number = 2,
+				number = 1,
+				light = {min = 0, max = 8},
+				height_limit = {min = -30000, max = 0},
+				
+				abm_nodes = {
+					spawn_on = {"default:stone"},
+				},
+			},
+			{
+				spawn_type = "generated",
+				
+				abm_interval = 40,
+				abm_chance = 7300,
+				max_number = 2,
+				number = 1,
+				light = {min = 0, max = 8},
+				height_limit = {min = -30000, max = 0},
+				
+				on_generated_chance = 100,
+				on_generated_nodes = {
+					spawn_on = {"default:stone"},
+				},
+			},
 		},
 		
 		spawn_egg = {

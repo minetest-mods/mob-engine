@@ -83,19 +83,64 @@ local def = {
 
 	spawning = {
 		ambience = {
-			spawn_type = "abm",
-			
-			max_number = 1,
-			number = {min = 1, max = 3},
-			time_range = {min = 18500, max = 5100},
-			light = {min = 0, max = 8},
-			height_limit = {min = -200, max = 50},
-			
-			abm_nodes = {
-				spawn_on = {"default:dirt_with_grass", "default:dirt", "default:stone"},
+			-- Not too deep
+			{ 
+				spawn_type = "abm",
+				
+				max_number = 2,
+				number = 1,
+				light = {min = 0, max = 8},
+				height_limit = {min = -300, max = 50},
+				
+				abm_nodes = {
+					spawn_on = {"default:stone"},
+				},
+				abm_interval = 55,
+				abm_chance = 7800,
 			},
-			abm_interval = 55,
-			abm_chance = 7800,
+			{ 
+				spawn_type = "generated",
+				
+				max_number = 2,
+				number = 1,
+				light = {min = 0, max = 8},
+				height_limit = {min = -300, max = 50},
+				
+				on_generated_chance = 70,
+				on_generated_nodes = { 
+					spawn_on = {"default:stone"}, 
+					get_under_air = true, 
+				},
+			},
+			-- Deep
+			{ 
+				spawn_type = "abm",
+				
+				max_number = 3,
+				number = 1,
+				light = {min = 0, max = 8},
+				height_limit = {min = -30000, max = -300},
+				
+				abm_nodes = {
+					spawn_on = {"default:stone"},
+				},
+				abm_interval = 55,
+				abm_chance = 5500,
+			},
+			{ 
+				spawn_type = "generated",
+				
+				max_number = 3,
+				number = {min = 1, max = 2},
+				light = {min = 0, max = 8},
+				height_limit = {min = -30000, max = -300},
+				
+				on_generated_chance = 100,
+				on_generated_nodes = { 
+					spawn_on = {"default:stone"}, 
+					get_under_air = true, 
+				},
+			},
 		},
 		
 		spawn_egg = {

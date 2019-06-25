@@ -152,7 +152,7 @@ creatures.register_mob("sheep:sheep", {
 		textures = {"sheep.png^sheep_white.png"},
 		collisionbox_width = 0.9,
 		collisionbox_height = 1.2,
-		rotation = 0.0,
+		rotation = -90.0,
 		vision_height = 0.9,
 		animations = {
 			idle = {start = 1, stop = 60, speed = 15},

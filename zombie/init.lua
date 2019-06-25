@@ -48,7 +48,7 @@ local def = {
 		collisionbox_width = 0.5,
 		collisionbox_height = 1.75,
 		vision_height = 1.4,
-		rotation = 0.0,
+		rotation = -90.0,
 		animations = {
 			idle = {start = 0, stop = 80, speed = 15},
 			walk = {start = 102, stop = 122, speed = 10.5},
@@ -79,13 +79,14 @@ local def = {
 
 	spawning = {
 		ambience = {
+			-- Surface
 			{
 				spawn_type = "abm",
 				
 				max_number = 1,
 				number = 2,
 				light = {min = 0, max = 8},
-				height_limit = {min = -200, max = 50},
+				height_limit = {min = -200, max = 0},
 				
 				abm_nodes = {
 					spawn_on = {
@@ -110,9 +111,9 @@ local def = {
 				max_number = 1,
 				number = 2,
 				light = {min = 0, max = 8},
-				height_limit = {min = -200, max = 50},
+				height_limit = {min = -200, max = 0},
 				
-				on_generated_chance = 55,
+				on_generated_chance = 60,
 				on_generated_nodes = {
 					spawn_on = {
 						"default:dirt_with_grass", 
@@ -124,7 +125,36 @@ local def = {
 						"group:sand"
 					},
 				},
-			}
+			},
+			-- Deep
+			{ 
+				spawn_type = "abm",
+				
+				max_number = 3,
+				number = 1,
+				light = {min = 0, max = 8},
+				height_limit = {min = -30000, max = 0},
+				
+				abm_nodes = {
+					spawn_on = {"default:stone"},
+				},
+				abm_interval = 55,
+				abm_chance = 5500,
+			},
+			{ 
+				spawn_type = "generated",
+				
+				max_number = 3,
+				number = {min = 1, max = 2},
+				light = {min = 0, max = 8},
+				height_limit = {min = -30000, max = 0},
+				
+				on_generated_chance = 100,
+				on_generated_nodes = { 
+					spawn_on = {"default:stone"}, 
+					get_under_air = true, 
+				},
+			},
 		},
 		
 		spawn_egg = {

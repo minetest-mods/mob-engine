@@ -67,11 +67,27 @@ local add_entity = function(p, mob_name)
 	local obj = core.add_entity(p, mob_name)
 	local self = obj:get_luaentity()
 	creatures.set_dir(self, creatures.get_random_dir())
+	
 	return self
 end
 
+-- Force add entity
+local force_add_entity = function(p, mob_name)
+	--minetest.forceload_block(pos)
+	local obj = core.add_entity(p, mob_name)
+	local self = obj:get_luaentity()
+	creatures.set_dir(self, creatures.get_random_dir())
+end
+
 -- Spawn a mob group
-local function groupSpawn(pos, mob, group, nodenames, range, max_loops)
+local function group_spawn(pos, mob, params)
+	-- Params
+	local group = params.group
+	local nodenames = params.nodenames
+	local range = params.range or 5
+	local max_loops = params.max_loops or 6
+	local delay = params.delay
+	
 	local cnt = 0
 	local cnt2 = 0
 
@@ -88,7 +104,11 @@ local function groupSpawn(pos, mob, group, nodenames, range, max_loops)
 		p.y = p.y + 1
 		if checkSpace(p, mob.size) == true then
 			cnt = cnt + 1
-			add_entity(p, mob.name)
+			if delay then
+				minetest.after(delay, add_entity, p, mob.name)
+			else
+				add_entity(p, mob.name)
+			end
 		end
 	end
 	if cnt < group then
@@ -161,11 +181,17 @@ creatures.spawn_at_ambience = function(pos, label, params)
 	end
 	
 	if number > 1 then
-		groupSpawn(pos, {name = def.mob_name, size = height_min}, number, params.spawn_on or def.spawn_on, 5)
+		group_spawn(pos, {name = def.mob_name, size = height_min}, 
+			{
+				group = number, 
+				nodenames = params.spawn_on or def.spawn_on, 
+				range = 5, 
+				delay = params.delay, 
+			}
+		)
 	else
 		
 		local spawn_pos = table.copy(pos)
-		
 		
 		if params.spawn_on then
 			spawn_pos = nil
@@ -207,7 +233,11 @@ creatures.spawn_at_ambience = function(pos, label, params)
 			end
 		end
 		
-		return add_entity(spawn_pos, def.mob_name)
+		if params.delay then
+			minetest.after(params.delay, add_entity, spawn_pos, def.mob_name)
+		else
+			add_entity(spawn_pos, def.mob_name)
+		end
 	end
 end
 local spawn_at_ambience = creatures.spawn_at_ambience
@@ -260,7 +290,11 @@ function creatures.register_spawn(label, def)
 					return
 				end
 				
-				spawn_at_ambience(pos, label, {spawn_on = def.abm_nodes.spawn_on})
+				spawn_at_ambience(pos, label, 
+					{
+						spawn_on = def.abm_nodes.spawn_on,
+					}
+				)
 			end,
 		})
 	
@@ -300,7 +334,6 @@ function creatures.register_spawn(label, def)
 			if pos 
 				and math.random(1, 100) <= def.on_generated_chance -- Calcule chance
 			then
-				
 				-- Adjust to a node under air 
 				local n = 0
 				while n <= 5 and minetest.get_node({x=pos.x,y=pos.y+1,z=pos.z}).name ~= "air" do
@@ -318,7 +351,11 @@ function creatures.register_spawn(label, def)
 					return
 				end
 				
-				spawn_at_ambience(pos, label, {spawn_on = def.spawn_on or def.on_generated_nodes.spawn_on})
+				spawn_at_ambience(pos, label, 
+					{
+						spawn_on = def.spawn_on or def.on_generated_nodes.spawn_on,
+					}
+				)
 			end
 		end)
 	end
