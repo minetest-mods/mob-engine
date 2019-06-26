@@ -41,7 +41,6 @@ creatures.register_mob("chicken:chicken", {
 	-- general
 	stats = {
 		hp = 5,
-		lifetime = 300, -- 5 Minutes
 		can_jump = 0.55,
 		can_swim = true,
 		can_burn = true,

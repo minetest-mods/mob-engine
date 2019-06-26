@@ -60,7 +60,6 @@ local colors = {"white", "grey", "brown", "black"}
 creatures.register_mob("sheep:sheep", {
 	stats = {
 		hp = 8,
-		lifetime = 450, -- 7,5 Minutes
 		can_jump = 1,
 		can_swim = true,
 		can_burn = true,
