@@ -79,6 +79,11 @@ creatures.register_on_register_mob(function(mob_name, def)
 	-- Register 'on_step'
 	creatures.register_on_step(mob_name, function(self, dtime)
 		
+		-- If wild ignore hunger
+		if self.is_wild == true then
+			return
+		end
+		
 		self.timers.hunger = self.timers.hunger + dtime
 		
 		if self.timers.hunger >= 20 then

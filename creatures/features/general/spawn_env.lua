@@ -46,6 +46,7 @@ local try_spawn = function(pos, label, spawn_on)
 		}
 	)
 	if self and self.object then
+		self.is_wild = true
 		self.spawn_env = {
 			node_pos = table.copy(pos),
 			node_name = minetest.get_node(pos).name,
@@ -212,14 +213,21 @@ creatures.register_on_register_mob(function(mob_name, def)
 		end
 	end)
 	
+	-- Register 'on_activate'
+	creatures.register_on_activate(mob_name, function(self, staticdata)
+		self.is_wild = self.is_wild or false
+	end)
+	
 	-- Register 'get_staticdata'
 	creatures.register_get_staticdata(mob_name, function(self)
 		if self.activated and self.spawn_env ~= nil and self.mob_node ~= nil and self.mob_node.pos ~= nil then
 			clear_env_node(self)
+			self.is_wild = false
 			return
 		end
 		if self.spawn_env ~= nil then
 			return {
+				is_wild = self.is_wild,
 				spawn_env = self.spawn_env,
 			}
 		end

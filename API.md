@@ -81,6 +81,7 @@ These values are reserved for the engine resources operation.
 * `is_child`: is true when MOB is a child
 * `randomized`: is true if is randomized
 * `activated`: for check if MOB is activated
+* `is_wild`: boolean for if MOB is wild
 
 
 Registering a mob
