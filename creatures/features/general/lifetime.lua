@@ -24,6 +24,8 @@ be misrepresented as being the original software.
 -- Register 'on_register_mob'
 creatures.register_on_register_mob(function(mob_name, def)
 	
+	if def.stats.lifetime == nil then return end
+	
 	-- Register 'on_activate'
 	creatures.register_on_activate(mob_name, function(self, staticdata)
 		
