@@ -99,18 +99,16 @@ creatures.register_on_register_mob(function(mob_name, def)
 			-- Update day for eat
 			local days = minetest.get_day_count() - self.last_satiated_day
 			
+			local thirsty = false
+			local hungry = false
+			
 			while (days >= mob_def.hunger.days_interval) do
 				
 				-- If need water
 				if mob_def.hunger.water then
 					local eat, node_pos = eat_nodes_near(self, mob_def.hunger.water_nodes or {"group:water"}, def)
 					if eat == false then
-						if self.hunger_activated == false then
-							self.object:remove()
-						else
-							creatures.kill_mob(self, "creatures:thirsty")
-						end
-						return true
+						thirsty = true
 					end
 				end
 				
@@ -118,22 +116,42 @@ creatures.register_on_register_mob(function(mob_name, def)
 				if mob_def.hunger.food then
 					local eat, node_pos = eat_nodes_near(self, mob_def.hunger.food.nodes, def)
 					if eat == false then
-						if self.hunger_activated == false then
-							self.object:remove()
-						else
-							creatures.kill_mob(self, "creatures:hungry")
-						end
-						return true
+						hungry = false
 					end
 					-- Check feeder
-					if creatures.registered_feeder_nodes[minetest.get_node(node_pos).name] then
-						creatures.set_feeder_level(node_pos, -1)
-					else
-						minetest.remove_node(node_pos)
+					if node_pos then 
+						if creatures.registered_feeder_nodes[minetest.get_node(node_pos).name] then
+							creatures.set_feeder_level(node_pos, -1)
+						else
+							minetest.remove_node(node_pos)
+						end
 					end
 				end
 				
 				days = days - mob_def.hunger.days_interval
+			end
+			
+			-- Update satiated status
+			if days > mob_def.hunger.days_interval then
+				self.satiated = false
+			else
+				self.satiated = true
+			end
+			
+			-- Check if kill MOB
+			if hungry == true then
+				if self.hunger_activated == false then
+					self.object:remove()
+				else
+					creatures.kill_mob(self, "creatures:hungry")
+				end
+			end
+			if thirsty == true then
+				if self.hunger_activated == false then
+					self.object:remove()
+				else
+					creatures.kill_mob(self, "creatures:thirsty")
+				end
 			end
 			
 			self.last_satiated_day = minetest.get_day_count() - days
