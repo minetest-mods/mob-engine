@@ -78,23 +78,19 @@ creatures.register_on_register_mob(function(mob_name, def)
 	
 	-- Register 'on_step'
 	creatures.register_on_step(mob_name, function(self, dtime)
-		
-		-- If wild ignore hunger
-		if self.is_wild == true then
-			return
-		end
-		
 		self.timers.hunger = self.timers.hunger + dtime
 		
-		if self.timers.hunger >= 20 then
+		if self.timers.hunger >= 2 then
 			self.timers.hunger = 0
+			
+			-- If wild then ignore hunger
+			if self.is_wild == true then
+				return
+			end
 			
 			local mob_def = creatures.mob_def(self)
 			
 			if not mob_def.hunger then return end
-			
-			-- Reset timelife because life is based on hunger
-			self.lifetimer = 0
 			
 			-- Update day for eat
 			local days = minetest.get_day_count() - self.last_satiated_day
@@ -103,7 +99,6 @@ creatures.register_on_register_mob(function(mob_name, def)
 			local hungry = false
 			
 			while (days >= mob_def.hunger.days_interval) do
-				
 				-- If need water
 				if mob_def.hunger.water then
 					local eat, node_pos = eat_nodes_near(self, mob_def.hunger.water_nodes or {"group:water"}, def)
@@ -116,7 +111,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 				if mob_def.hunger.food then
 					local eat, node_pos = eat_nodes_near(self, mob_def.hunger.food.nodes, def)
 					if eat == false then
-						hungry = false
+						hungry = true
 					end
 					-- Check feeder
 					if node_pos then 
@@ -128,7 +123,11 @@ creatures.register_on_register_mob(function(mob_name, def)
 					end
 				end
 				
-				days = days - mob_def.hunger.days_interval
+				if hungry == false and thirsty == false then
+					days = days - mob_def.hunger.days_interval
+				else
+					break
+				end
 			end
 			
 			-- Update satiated status
@@ -145,8 +144,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 				else
 					creatures.kill_mob(self, "creatures:hungry")
 				end
-			end
-			if thirsty == true then
+			elseif thirsty == true then
 				if self.hunger_activated == false then
 					self.object:remove()
 				else

@@ -222,7 +222,7 @@ creatures.register_mob_node = function(mob_node, def)
 			if hash_tb[hashlink] 
 				and hash_tb[hashlink]:get_pos()
 				and creatures.get_dist_p1top2(pos, hash_tb[hashlink]:get_pos()) < 10 
-				and node_way(self, pos, hash_tb[hashlink]:get_pos()) == true
+				and node_way(hash_tb[hashlink]:get_luaentity(), pos, hash_tb[hashlink]:get_pos()) == true
 			then
 				return
 			end

@@ -45,7 +45,7 @@ local try_spawn = function(pos, label, spawn_on)
 			ignore_light = true,
 		}
 	)
-	if self and self.object then
+	if self then
 		self.is_wild = true
 		self.spawn_env = {
 			node_pos = table.copy(pos),

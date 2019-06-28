@@ -236,7 +236,7 @@ creatures.spawn_at_ambience = function(pos, label, params)
 		if params.delay then
 			minetest.after(params.delay, add_entity, spawn_pos, def.mob_name)
 		else
-			add_entity(spawn_pos, def.mob_name)
+			return add_entity(spawn_pos, def.mob_name)
 		end
 	end
 end
