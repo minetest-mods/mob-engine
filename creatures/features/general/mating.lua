@@ -108,9 +108,10 @@ creatures.register_on_register_mob(function(mob_name, def)
 				end
 			end
 			
-			if table.maxn(fertile_mobs) > 2 then
+			if table.maxn(fertile_mobs) >= 2 then
 				-- Random number of childs for spawn
-				local c = math.ceil((table.maxn(fertile_mobs)/2)*0.3)
+				local c = math.ceil((table.maxn(fertile_mobs) * (def.mating.birth_multiplier or 0.5)))
+				
 				while c > 0 do
 					-- Spawn
 					minetest.add_entity(fertile_mobs[c].mob_node.pos, def.mating.child_mob)

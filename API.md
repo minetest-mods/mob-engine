@@ -379,6 +379,9 @@ Definition tables
         mating = {
             child_mob = "modname:mob", 	-- Name of child MOB, if nil then defined child MOB is used <optional>
             interval = 2, 		-- Interval (in days) between mating
+            birth_multiplier = 0.5, 	--[[ How many new MOBs will be born for each fertile MOB. 
+                                                 If 1, each fertile MOB spawns 1 child MOB
+                                                 Default is 0.5]]
             spawn_type = "mob_node", 	--[[ Type for spawn child MOB
                                                  "mob_node" spawn child in MOB node]]
         },

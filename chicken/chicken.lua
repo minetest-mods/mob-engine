@@ -130,6 +130,7 @@ creatures.register_mob("chicken:chicken", {
 	mating = {
 		child_mob = "chicken:chicken_child", 
 		interval = 3, 
+		birth_multiplier = 0.5,
 		spawn_type = "mob_node", 
 	},
 	

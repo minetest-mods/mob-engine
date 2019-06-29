@@ -199,6 +199,7 @@ creatures.register_mob("sheep:sheep", {
 	mating = {
 		child_mob = "sheep:sheep_child", 
 		interval = 5, 
+		birth_multiplier = 0.3,
 		spawn_type = "mob_node", 
 	},
 	
