@@ -93,12 +93,12 @@ local function group_spawn(pos, mob, params)
 
 	local nodes = core.find_nodes_in_area({x = pos.x - range, y = pos.y - range, z = pos.z - range},
 	{x = pos.x + range, y = pos.y, z = pos.z + range}, nodenames)
-	local number = #nodes - 1
+	local number = table.maxn(nodes) - 1
 	if max_loops and type(max_loops) == "number" then
 		number = max_loops
 	end
 	
-	while cnt < group and cnt2 < number do
+	while table.maxn(nodes) > 1 and cnt < group and cnt2 < number do
 		cnt2 = cnt2 + 1
 		local p = nodes[math.random(1, number)]
 		p.y = p.y + 1

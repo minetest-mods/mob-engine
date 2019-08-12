@@ -19,6 +19,8 @@
 -- 3. This notice may not be removed or altered from any source distribution.
 --
 
+-- Spawn chance
+local spawn_chance = tonumber(minetest.settings:get("zombie_spawn_chance") or 1)
 
 local def = {
 	-- general
@@ -83,8 +85,8 @@ local def = {
 			{
 				spawn_type = "abm",
 				
-				max_number = 1,
-				number = 2,
+				max_number = 2*spawn_chance,
+				number = 1*spawn_chance,
 				light = {min = 0, max = 8},
 				height_limit = {min = -200, max = 0},
 				
@@ -103,17 +105,17 @@ local def = {
 					},
 				},
 				abm_interval = 36,
-				abm_chance = 7600,
+				abm_chance = (7600/spawn_chance),
 			},
 			{
 				spawn_type = "generated",
 				
-				max_number = 1,
-				number = 2,
+				max_number = 2*spawn_chance,
+				number = 1*spawn_chance,
 				light = {min = 0, max = 8},
 				height_limit = {min = -200, max = 0},
 				
-				on_generated_chance = 60,
+				on_generated_chance = 60*spawn_chance,
 				on_generated_nodes = {
 					spawn_on = {
 						"default:dirt_with_grass", 
@@ -124,14 +126,15 @@ local def = {
 						"default:dirt",
 						"group:sand"
 					},
+					get_under_air = true, 
 				},
 			},
 			-- Deep
 			{ 
 				spawn_type = "abm",
 				
-				max_number = 3,
-				number = 1,
+				max_number = 3*spawn_chance,
+				number = 1*spawn_chance,
 				light = {min = 0, max = 8},
 				height_limit = {min = -30000, max = 0},
 				
@@ -139,13 +142,16 @@ local def = {
 					spawn_on = {"default:stone"},
 				},
 				abm_interval = 55,
-				abm_chance = 5500,
+				abm_chance = 5500/spawn_chance,
 			},
 			{ 
 				spawn_type = "generated",
 				
-				max_number = 3,
-				number = {min = 1, max = 2},
+				max_number = 3*spawn_chance,
+				number = {
+					min = 1*spawn_chance, 
+					max = 2*spawn_chance
+				},
 				light = {min = 0, max = 8},
 				height_limit = {min = -30000, max = 0},
 				

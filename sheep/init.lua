@@ -24,6 +24,8 @@ be misrepresented as being the original software.
 -- Global table
 sheep = {}
 
+sheep.spawn_env_chance = tonumber(minetest.settings:get("sheep_spawn_chance") or 2)
+
 -- Craftitems
 dofile(core.get_modpath("sheep") .. "/craftitems.lua")
 

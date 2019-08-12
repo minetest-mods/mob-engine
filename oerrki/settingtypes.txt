@@ -1,0 +1,5 @@
+# Settings applicable from Minetest GUI
+
+# Oerrki Spawn
+# Higher values increase the population of spawned oerrki around the world
+oerrki_spawn_chance (Oerrki Spawn) int 1

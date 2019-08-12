@@ -1,0 +1,5 @@
+# Settings applicable from Minetest GUI
+
+# Sheep Spawn
+# Higher values increase the population of spawned sheep around the world
+sheep_spawn_chance (Sheep Spawn) int 2

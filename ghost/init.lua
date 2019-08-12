@@ -19,6 +19,8 @@
 -- 3. This notice may not be removed or altered from any source distribution.
 --
 
+-- Spawn chance
+local spawn_chance = tonumber(minetest.settings:get("ghost_spawn_chance") or 1)
 
 local def = {
 	-- general
@@ -81,9 +83,9 @@ local def = {
 				spawn_type = "abm",
 				
 				abm_interval = 40,
-				abm_chance = 7300,
-				max_number = 1,
-				number = 1,
+				abm_chance = 7300/spawn_chance,
+				max_number = 1*spawn_chance,
+				number = 1*spawn_chance,
 				time_range = {min = 18500, max = 4000},
 				light = {min = 0, max = 8},
 				height_limit = {min = 1, max = 80},
@@ -96,15 +98,13 @@ local def = {
 			{
 				spawn_type = "generated",
 				
-				abm_interval = 40,
-				abm_chance = 7300,
-				max_number = 1,
-				number = 1,
+				max_number = 1*spawn_chance,
+				number = 1*spawn_chance,
 				time_range = {min = 18500, max = 4000},
 				light = {min = 0, max = 8},
 				height_limit = {min = 1, max = 80},
 				
-				on_generated_chance = 60,
+				on_generated_chance = 60*spawn_chance,
 				on_generated_nodes = {
 					spawn_on = {"default:gravel", "default:dirt_with_grass", "default:dirt",
 					"group:leaves", "group:sand"},
@@ -115,9 +115,9 @@ local def = {
 				spawn_type = "abm",
 				
 				abm_interval = 40,
-				abm_chance = 7300,
-				max_number = 2,
-				number = 1,
+				abm_chance = 7300/spawn_chance,
+				max_number = 2*spawn_chance,
+				number = 1*spawn_chance,
 				light = {min = 0, max = 8},
 				height_limit = {min = -30000, max = 0},
 				
@@ -129,9 +129,9 @@ local def = {
 				spawn_type = "generated",
 				
 				abm_interval = 40,
-				abm_chance = 7300,
-				max_number = 2,
-				number = 1,
+				abm_chance = 7300/spawn_chance,
+				max_number = 2*spawn_chance,
+				number = 1*spawn_chance,
 				light = {min = 0, max = 8},
 				height_limit = {min = -30000, max = 0},
 				

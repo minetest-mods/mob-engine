@@ -1,0 +1,5 @@
+# Settings applicable from Minetest GUI
+
+# Ghost Spawn
+# Higher values increase the population of spawned ghost around the world
+ghost_spawn_chance (Ghost Spawn) int 1

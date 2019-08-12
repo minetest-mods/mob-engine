@@ -31,6 +31,8 @@ chicken.nest_update_time = 30
 
 chicken.chicken_timer = 10
 
+chicken.spawn_env_chance = tonumber(minetest.settings:get("chicken_spawn_chance") or 2)
+
 -- Egg
 dofile(core.get_modpath("chicken") .. "/egg.lua")
 

@@ -218,7 +218,7 @@ creatures.register_mob("sheep:sheep", {
 				height_limit = {min = 0, max = 150},
 				
 				-- Spawn environment
-				spawn_env_chance = 2,
+				spawn_env_chance = sheep.spawn_env_chance,
 				spawn_env_seed = 2359,
 				spawn_env_biomes = {
 					-- Grassland

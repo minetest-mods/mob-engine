@@ -154,7 +154,7 @@ creatures.register_mob("chicken:chicken", {
 				height_limit = {min = 1, max = 150},
 				
 				-- Spawn environment
-				spawn_env_chance = 2,
+				spawn_env_chance = chicken.spawn_env_chance,
 				spawn_env_seed = 7254,
 				spawn_env_biomes = {
 					-- Grassland

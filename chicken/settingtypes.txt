@@ -1,0 +1,5 @@
+# Settings applicable from Minetest GUI
+
+# Chicken Spawn
+# Higher values increase the population of spawned chickens around the world
+chicken_spawn_chance (Chicken Spawn) int 2

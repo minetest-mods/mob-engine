@@ -1,0 +1,5 @@
+# Settings applicable from Minetest GUI
+
+# Zombie Spawn
+# Higher values increase the population of spawned zombies around the world
+zombie_spawn_chance (Zombie Spawn) int 1
