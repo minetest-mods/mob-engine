@@ -30,6 +30,9 @@ creatures.params.disable_hostile = minetest.settings:get_bool("creatures_disable
 -- Allow hostile
 creatures.params.disable_particles = minetest.settings:get_bool("creatures_disable_particles") or false
 
+-- Spawn Control
+creatures.params.spawn_flood_control = tonumber(minetest.settings:get("creatures_spawn_flood_control") or 5)
+
 -- Default values
 creatures.default_value = {}
 

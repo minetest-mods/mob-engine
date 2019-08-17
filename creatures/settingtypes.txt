@@ -6,3 +6,8 @@ creatures_disable_hostile (Disable hostile MOBs) bool false
 
 # Disable particles
 creatures_disable_particles (Disable particles) bool false
+
+# Spawn Flood Control
+# Controls the number of simultaneous spawning
+# 0 = disable control
+creatures_spawn_flood_control (Spawn Flood Control) int 5 0

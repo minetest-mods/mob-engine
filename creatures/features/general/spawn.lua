@@ -47,19 +47,20 @@ end
 
 
 -- Local timer 'time_taker'
-local time_taker = 0
+local spawn_number = 0
+local spawn_number_limit = creatures.params.spawn_flood_control
 local function step(tick)
 	core.after(tick, step, tick)
-	time_taker = time_taker + tick
+	spawn_number = 0
 end
 step(0.5) -- start timer
 
 -- Stop ABM Flood
 local function stopABMFlood()
-	if time_taker == 0 then
+	if spawn_number > spawn_number_limit then
 		return true
 	end
-	time_taker = 0
+	spawn_number = spawn_number + 1
 end
 
 -- Add entity
@@ -98,16 +99,18 @@ local function group_spawn(pos, mob, params)
 		number = max_loops
 	end
 	
-	while table.maxn(nodes) > 1 and cnt < group and cnt2 < number do
+	while table.maxn(nodes) > 2 and cnt < group and cnt2 < number do
 		cnt2 = cnt2 + 1
 		local p = nodes[math.random(1, number)]
-		p.y = p.y + 1
-		if checkSpace(p, mob.size) == true then
-			cnt = cnt + 1
-			if delay then
-				minetest.after(delay, add_entity, p, mob.name)
-			else
-				add_entity(p, mob.name)
+		if p then
+			p.y = p.y + 1
+			if checkSpace(p, mob.size) == true then
+				cnt = cnt + 1
+				if delay then
+					minetest.after(delay, add_entity, p, mob.name)
+				else
+					add_entity(p, mob.name)
+				end
 			end
 		end
 	end
@@ -276,7 +279,7 @@ function creatures.register_spawn(label, def)
 			action = function(pos, node, active_object_count, active_object_count_wider)
 				
 				-- prevent abm-"feature"
-				if stopABMFlood() == true then
+				if creatures.params.spawn_flood_control > 0 and stopABMFlood() == true then
 					return
 				end
 				
