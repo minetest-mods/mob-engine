@@ -59,6 +59,7 @@ These values are reserved for the engine resources operation.
 * `mode`: current mode
 * `last_mode`: last mode
 * `last_pos`: last pos
+* `last_light`: last pos light
 * `can_fly`: is true if MOB can fly
 * `can_jump`: block height MOB can jump
 * `remove`: mark to remove MOB

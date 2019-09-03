@@ -1,6 +1,6 @@
 --[[
 = Creatures MOB-Engine (cme) =
-Copyright (C) 2017 Mob API Developers and Contributors
+Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
 location.lua
@@ -60,6 +60,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 				-- Update last locate
 				self.last_pos = current_pos
 				self.last_node = self.current_node
+				self.last_light = minetest.get_node_light(self.last_pos)
 				
 				self.current_node = core.get_node_or_nil(current_pos)
 			end
