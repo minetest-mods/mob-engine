@@ -1,6 +1,6 @@
 --[[
 = Creatures MOB-Engine (cme) =
-Copyright (C) 2017 Mob API Developers and Contributors
+Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
 burn.lua
@@ -45,7 +45,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 		
 		-- Add damage when in lava
 		if self.timers.burn > 1 and self.last_node then
-			self.envtimer = 0
+			self.timers.burn = 0
 			local name = self.last_node.name
 			if self.can_burn then
 				if name == "fire:basic_flame" or name == "default:lava_source" then
@@ -54,9 +54,37 @@ creatures.register_on_register_mob(function(mob_name, def)
 			end
 
 			-- Add damage when light is too bright
-			local tod = core.get_timeofday() * 24000
-			if self.last_llvl and self.can_burn and self.last_llvl > (def.stats.light.max or 15) and tod < 18000 then
-				changeHP(self, -1)
+			if self.can_burn then
+				local light_damage, time_damage
+				
+				-- Check light
+				if def.stats.burn_light then
+					light_damage = false
+					if self.last_light and creatures.in_range(def.stats.burn_light, self.last_light) == true then
+						light_damage = true
+					end
+				end
+				
+				-- Check time of day
+				if def.stats.burn_time_of_day then
+					time_damage = false
+					if creatures.in_range(def.stats.burn_time_of_day, (core.get_timeofday()*24000), 24000) == true then
+						time_damage = true
+					end
+				end
+				
+				minetest.chat_send_all("light_damage = "..dump(light_damage))
+				minetest.chat_send_all("time_damage = "..dump(time_damage))
+				-- Take damage
+				if light_damage ~= nil or time_damage ~= nil then
+					
+					if light_damage == nil then light_damage = true end
+					if time_damage == nil then time_damage = true end
+					
+					if light_damage == true and time_damage == true then
+						changeHP(self, -1)
+					end
+				end
 			end
 		end
 	end)

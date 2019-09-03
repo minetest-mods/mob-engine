@@ -317,7 +317,8 @@ Definition tables
             can_panic = false, 		-- runs fast around when hit (requires mode "walk") <optional>
             has_kockback = false,    	-- get knocked back when hit <optional>
             sneaky = false, 		-- disables step sounds <optional>
-            light = {min, max},      	-- which light level will burn creature (requires can_burn = true) <optional>
+            burn_light = {range},	-- which light level will burn creature (requires can_burn = true) <optional>
+            burn_time_of_day = {range}, -- which time of day will burn creature (requires can_burn = true) <optional>
             
             max_drop = 2, 		-- height in nodes <optional> (Default is 2)
             has_falldamage = false, 	-- deals damage if falling more than max_drop blocks <optional>

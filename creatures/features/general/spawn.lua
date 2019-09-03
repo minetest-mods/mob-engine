@@ -1,6 +1,6 @@
 --[[
 = Creatures MOB-Engine (cme) =
-Copyright (C) 2017 Mob API Developers and Contributors
+Copyright (C) 2019 Mob API Developers and Contributors
 Copyright (C) 2015-2016 BlockMen <blockmen2015@gmail.com>
 
 spawn.lua
@@ -20,19 +20,6 @@ product, an acknowledgment in the product documentation is required.
 be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 ]]
-
-
--- Checks if a number is within range
-local function inRange(range, value)
-	if not value or not range or not range.min or not range.max then
-		return false
-	end
-	if (value >= range.min and value <= range.max) then
-		return true
-	end
-	return false
-end
-
 
 -- Check if 'height' is free from 'pos'
 local function checkSpace(pos, height)
@@ -130,20 +117,13 @@ creatures.spawn_at_ambience = function(pos, label, params)
 	-- Check Time of Day
 	local tod = core.get_timeofday() * 24000
 	if params.ignore_time_range ~= true and def.time_range then
-		local range = table.copy(def.time_range)
-		if range.min > range.max then
-			if tod < range.max then
-				tod = tod + 24000
-			end
-			range.max = range.max + 24000
-		end
-		if inRange(range, tod) == false then
+		if creatures.in_range(def.time_range, tod, 24000) == false then
 			return
 		end
 	end
 	
 	-- Check height limits
-	if params.ignore_height_limits ~= true and def.height_limit and not inRange(def.height_limit, pos.y) then
+	if params.ignore_height_limits ~= true and def.height_limit and not creatures.in_range(def.height_limit, pos.y) then
 		return
 	end
 	
@@ -210,7 +190,7 @@ creatures.spawn_at_ambience = function(pos, label, params)
 				if checkSpace(p, height_min) then
 					-- Check light
 					local llvl = core.get_node_light(p)
-					if def.light and not inRange(def.light, llvl) then
+					if def.light and not creatures.in_range(def.light, llvl) then
 						p = nil
 					else
 						spawn_pos = table.copy(p)
@@ -227,7 +207,7 @@ creatures.spawn_at_ambience = function(pos, label, params)
 			spawn_pos.y = spawn_pos.y + 1
 			-- Check light
 			local llvl = core.get_node_light(spawn_pos)
-			if params.ignore_light ~= true and def.light and not inRange(def.light, llvl) then
+			if params.ignore_light ~= true and def.light and not creatures.in_range(def.light, llvl) then
 				return
 			end
 			-- space check
@@ -312,8 +292,8 @@ function creatures.register_spawn(label, def)
 			
 			-- Check height limits
 			if def.height_limit 
-				and not inRange(def.height_limit, minp.y) 
-				and not inRange(def.height_limit, maxp.y)
+				and not creatures.in_range(def.height_limit, minp.y) 
+				and not creatures.in_range(def.height_limit, maxp.y)
 			then
 				return
 			end
