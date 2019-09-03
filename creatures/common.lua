@@ -136,3 +136,22 @@ creatures.is_wall = function(pos)
 	return false
 end
 
+-- Checks if a number is within range
+creatures.in_range = function(range, value, cycle_limit)
+	if not value or not range or not range.min or not range.max then
+		return false
+	end
+	local new_range = table.copy(range)
+	local new_value = value
+	if cycle_limit and new_range.min > new_range.max then
+		if new_value < new_range.max then
+			new_value = new_value + cycle_limit
+		end
+		new_range.max = new_range.max + cycle_limit
+	end
+	if (new_value >= new_range.min and new_value <= new_range.max) then
+		return true
+	end
+	return false
+end
+

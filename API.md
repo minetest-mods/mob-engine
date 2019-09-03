@@ -288,6 +288,9 @@ Common methods when working with mob-engine
   * Return `true` if no collide
 * `creatures.get_far_node(pos)`: Get a node
 * `creatures.check_free_pos(pos)`: Check if is walkable for a MOB
+* `creatures.in_range(range, value, [cycle_limit])`: Checks if a value is within range
+  * `range.min` and `range.max` are limits
+  * `range.cycle_limit` for cyclic limit
 
 Global tables
 -------------
