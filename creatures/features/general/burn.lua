@@ -73,8 +73,6 @@ creatures.register_on_register_mob(function(mob_name, def)
 					end
 				end
 				
-				minetest.chat_send_all("light_damage = "..dump(light_damage))
-				minetest.chat_send_all("time_damage = "..dump(time_damage))
 				-- Take damage
 				if light_damage ~= nil or time_damage ~= nil then
 					
