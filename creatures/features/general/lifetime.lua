@@ -48,7 +48,7 @@ creatures.register_on_register_mob(function(mob_name, def)
 		self.lifetimer = self.lifetimer + dtime
 		
 		-- check lifetime
-		if self.lifetimer > def.stats.lifetime then
+		if self.is_wild ~= true and self.lifetimer > def.stats.lifetime then
 			creatures.kill_mob(self, "lifetime_elapsed")
 		end
 	end)
