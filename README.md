@@ -18,21 +18,9 @@ Currently includes:
 ---
 ## Install
 
-### Minetest Bower *(recommended)*
-
-**Mob Engine** is on **[Minetest Bower](https://minetest-bower.herokuapp.com)** *(a mod repository and package manager for Minetest)*
-
-You can easily install with the command:
-
-`bower install --save mob-engine`
-
-More information [here](https://minetest-bower.herokuapp.com/mods/mob-engine).
-
-
-### Manual
 You can download the [latest release](https://github.com/minetest-mods/mob-engine/releases) and extract it to your `mods` folder.
 
-More information [here](http://wiki.minetest.net/Installing_Mods).
+More information [here](https://docs.luanti.org/for-players/installing-mods/).
 
 ---
 ## License
